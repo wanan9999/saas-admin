@@ -15,7 +15,7 @@ import (
 
 	"github.com/gin-gonic/gin"
 
-	"github.com/tabloy/keygate/internal/store"
+	"github.com/wanan9999/saas-admin/internal/store"
 )
 
 // requireStore spins up a real store against TEST_DATABASE_URL. The

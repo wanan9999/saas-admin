@@ -15,8 +15,8 @@ import (
 
 	"github.com/gin-gonic/gin"
 
-	"github.com/tabloy/keygate/internal/model"
-	"github.com/tabloy/keygate/pkg/response"
+	"github.com/wanan9999/saas-admin/internal/model"
+	"github.com/wanan9999/saas-admin/pkg/response"
 )
 
 // OTPSend handles POST /api/v1/auth/otp/send
@@ -180,7 +180,7 @@ func (h *AuthHandler) OTPVerify(c *gin.Context) {
 
 // signupAllowed reports whether email may receive a login code.
 //
-// Default (signup_mode unset or "open") is what Keygate has always
+// Default (signup_mode unset or "open") is what saas-admin has always
 // done: anyone can ask for a code and an account is created on first
 // login. Operators who sell to a known customer list can set
 // "licensed_only", after which a code only goes to an address that

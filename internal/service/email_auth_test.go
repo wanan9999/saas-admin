@@ -245,9 +245,9 @@ func TestValidateSMTPLine(t *testing.T) {
 func TestParseEnvelopeAddress(t *testing.T) {
 	ok := []struct{ in, want string }{
 		{"noreply@example.com", "noreply@example.com"},
-		{"Keygate <noreply@example.com>", "noreply@example.com"},
-		{`"Keygate Billing" <billing@example.com>`, "billing@example.com"},
-		{"  Keygate <noreply@example.com>  ", "noreply@example.com"},
+		{"Example <noreply@example.com>", "noreply@example.com"},
+		{`"Example Billing" <billing@example.com>`, "billing@example.com"},
+		{"  Example <noreply@example.com>  ", "noreply@example.com"},
 		{"a.b+tag@sub.example.co.uk", "a.b+tag@sub.example.co.uk"},
 	}
 	for _, tc := range ok {

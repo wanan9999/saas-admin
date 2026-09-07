@@ -1,28 +1,24 @@
 package handler
 
 import (
+	"context"
 	"encoding/json"
-	"log/slog"
 	"net/http"
 	"strconv"
 	"strings"
-	"sync"
 	"time"
 
 	"github.com/gin-gonic/gin"
-	"github.com/tabloy/keygate/internal/branding"
-	"github.com/tabloy/keygate/internal/store"
-	"github.com/tabloy/keygate/internal/version"
-	"github.com/tabloy/keygate/pkg/response"
+	"github.com/wanan9999/saas-admin/internal/branding"
+	"github.com/wanan9999/saas-admin/internal/store"
+	"github.com/wanan9999/saas-admin/internal/version"
+	"github.com/wanan9999/saas-admin/pkg/response"
 )
 
 type SystemHandler struct {
-	Store       *store.Store
-	updateCache *updateInfo
-	cacheMu     sync.RWMutex
-	cacheTime   time.Time
-	RepoOwner   string
-	RepoName    string
+	Store     *store.Store
+	RepoOwner string
+	RepoName  string
 }
 
 type updateInfo struct {
@@ -40,8 +36,8 @@ type updateInfo struct {
 func NewSystemHandler(s *store.Store) *SystemHandler {
 	return &SystemHandler{
 		Store:     s,
-		RepoOwner: "tabloy",
-		RepoName:  "keygate",
+		RepoOwner: "wanan9999",
+		RepoName:  "saas-admin",
 	}
 }
 
@@ -51,64 +47,17 @@ func (h *SystemHandler) GetVersion(c *gin.Context) {
 		"commit":      version.Commit,
 		"build_date":  version.BuildDate,
 		"project":     branding.Project,
-		"project_url": branding.URL,
+		"project_url": branding.RepositoryURL,
 	})
 }
 
-// CheckUpdate checks GitHub for a newer release. Results are cached for 1 hour.
-// On startup, the background checker calls this periodically so the dashboard
-// always shows fresh update status without the admin clicking anything.
+// CheckUpdate performs one explicit GitHub request. It is only wired to the
+// authenticated admin action; no startup or periodic update request exists.
 func (h *SystemHandler) CheckUpdate(c *gin.Context) {
-	h.cacheMu.RLock()
-	if h.updateCache != nil && time.Since(h.cacheTime) < time.Hour {
-		h.cacheMu.RUnlock()
-		response.OK(c, h.updateCache)
-		return
-	}
-	h.cacheMu.RUnlock()
-
-	info := h.fetchLatestRelease()
-
-	h.cacheMu.Lock()
-	h.updateCache = info
-	h.cacheTime = time.Now()
-	h.cacheMu.Unlock()
-
-	response.OK(c, info)
+	response.OK(c, h.fetchLatestRelease(c.Request.Context()))
 }
 
-// StartAutoCheck runs a background loop that checks for updates every 6 hours.
-// The result is cached so the admin dashboard always has fresh data.
-func (h *SystemHandler) StartAutoCheck(done <-chan struct{}) {
-	// Check once on startup (after 30s delay to let server fully start)
-	time.AfterFunc(30*time.Second, func() {
-		info := h.fetchLatestRelease()
-		h.cacheMu.Lock()
-		h.updateCache = info
-		h.cacheTime = time.Now()
-		h.cacheMu.Unlock()
-		if info.Available {
-			slog.Info("update available", "current", info.Current, "latest", info.Latest, "url", info.ReleaseURL)
-		}
-	})
-
-	ticker := time.NewTicker(6 * time.Hour)
-	defer ticker.Stop()
-	for {
-		select {
-		case <-done:
-			return
-		case <-ticker.C:
-			info := h.fetchLatestRelease()
-			h.cacheMu.Lock()
-			h.updateCache = info
-			h.cacheTime = time.Now()
-			h.cacheMu.Unlock()
-		}
-	}
-}
-
-func (h *SystemHandler) fetchLatestRelease() *updateInfo {
+func (h *SystemHandler) fetchLatestRelease(ctx context.Context) *updateInfo {
 	info := &updateInfo{
 		Current:   version.Version,
 		CheckedAt: time.Now().UTC().Format(time.RFC3339),
@@ -116,12 +65,12 @@ func (h *SystemHandler) fetchLatestRelease() *updateInfo {
 
 	client := &http.Client{Timeout: 10 * time.Second}
 	url := "https://api.github.com/repos/" + h.RepoOwner + "/" + h.RepoName + "/releases/latest"
-	req, err := http.NewRequest("GET", url, nil)
+	req, err := http.NewRequestWithContext(ctx, http.MethodGet, url, nil)
 	if err != nil {
 		return info
 	}
 	req.Header.Set("Accept", "application/vnd.github.v3+json")
-	req.Header.Set("User-Agent", "Keygate/"+version.Version)
+	req.Header.Set("User-Agent", branding.Project+"/"+version.Version)
 
 	resp, err := client.Do(req)
 	if err != nil {

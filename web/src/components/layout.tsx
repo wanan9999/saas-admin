@@ -4,7 +4,6 @@ import {
   ChevronDown,
   ChevronRight,
   FileKey2,
-  Heart,
   Key,
   Layers,
   LayoutDashboard,
@@ -45,7 +44,7 @@ type NavGroup = { label: string; items: NavItem[] }
 
 function sidebarCollapsed() {
   try {
-    return localStorage.getItem("keygate-sidebar-collapsed") === "true"
+    return localStorage.getItem("saas-admin-sidebar-collapsed") === "true"
   } catch {
     return false
   }
@@ -136,7 +135,7 @@ export function AdminLayout() {
   const toggleCollapsed = () => {
     const next = !collapsed
     try {
-      localStorage.setItem("keygate-sidebar-collapsed", String(next))
+      localStorage.setItem("saas-admin-sidebar-collapsed", String(next))
     } catch {
       // Sidebar remains interactive when storage is unavailable.
     }
@@ -223,22 +222,7 @@ export function AdminLayout() {
         })}
       </nav>
 
-      <div className="space-y-1 border-t border-sidebar-border p-2.5">
-        {navItem(settingsItem)}
-        <a
-          href="https://keygate.app/sponsorships"
-          target="_blank"
-          rel="noopener noreferrer"
-          title={collapsed ? t("nav.sponsor") : undefined}
-          className={cn(
-            "flex h-9 items-center gap-3 rounded-lg px-3 text-sm font-medium text-sidebar-foreground/70 transition-colors hover:bg-pink-500/10 hover:text-pink-600",
-            collapsed && "lg:justify-center lg:px-0",
-          )}
-        >
-          <Heart className="size-4 shrink-0 text-pink-500" />
-          <span className={cn("truncate", collapsed && "lg:sr-only")}>{t("nav.sponsor")}</span>
-        </a>
-      </div>
+      <div className="space-y-1 border-t border-sidebar-border p-2.5">{navItem(settingsItem)}</div>
 
       <div className="border-t border-sidebar-border p-2.5">
         <DropdownMenu>

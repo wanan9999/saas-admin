@@ -25,11 +25,11 @@ import (
 	"github.com/stripe/stripe-go/v82/subscription"
 	"github.com/stripe/stripe-go/v82/webhook"
 
-	"github.com/tabloy/keygate/internal/license"
-	"github.com/tabloy/keygate/internal/model"
-	"github.com/tabloy/keygate/internal/service"
-	"github.com/tabloy/keygate/internal/store"
-	"github.com/tabloy/keygate/pkg/response"
+	"github.com/wanan9999/saas-admin/internal/license"
+	"github.com/wanan9999/saas-admin/internal/model"
+	"github.com/wanan9999/saas-admin/internal/service"
+	"github.com/wanan9999/saas-admin/internal/store"
+	"github.com/wanan9999/saas-admin/pkg/response"
 )
 
 type StripeHandler struct {
@@ -594,7 +594,7 @@ func (h *StripeHandler) fulfillCheckout(ctx context.Context, email, customerID, 
 			return false, fmt.Errorf("find plan %s: %w", metadata["plan_id"], err)
 		}
 	}
-	// Sessions created outside Keygate (Stripe Payment Links, the
+	// Sessions created outside saas-admin (Stripe Payment Links, the
 	// merchant's own integration) carry no plan_id metadata, and a
 	// one-time payment has no subscription to look up. The line items
 	// still say which price was bought — resolve the plan from that.
@@ -963,7 +963,7 @@ func (h *StripeHandler) SyncRecentCheckouts(ctx context.Context) {
 	}
 }
 
-// invoiceEvent is the part of an invoice webhook payload Keygate acts
+// invoiceEvent is the part of an invoice webhook payload saas-admin acts
 // on. Stripe moved the subscription reference in API version
 // 2025-03-31: older versions put it at invoice.subscription, current
 // ones under invoice.parent.subscription_details.subscription. Both
@@ -996,7 +996,7 @@ func (e *invoiceEvent) SubscriptionID() string {
 }
 
 // subscriptionEvent is the part of a subscription webhook payload
-// Keygate acts on. current_period_end moved from the subscription to
+// saas-admin acts on. current_period_end moved from the subscription to
 // its items in API version 2025-03-31; read both.
 type subscriptionEvent struct {
 	ID               string `json:"id"`
@@ -1846,7 +1846,7 @@ func (h *StripeHandler) productName(ctx context.Context, productID string) strin
 }
 
 // resolvePlanFromLineItems maps a checkout session to a plan through
-// the price on its first line item. Keygate creates single-item
+// the price on its first line item. saas-admin creates single-item
 // sessions; a multi-item session built elsewhere fulfils its first
 // item only.
 func (h *StripeHandler) resolvePlanFromLineItems(ctx context.Context, sessionID string) (*model.Plan, error) {

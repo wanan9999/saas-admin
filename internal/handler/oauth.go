@@ -12,12 +12,12 @@ import (
 
 	"github.com/gin-gonic/gin"
 
-	"github.com/tabloy/keygate/internal/config"
-	"github.com/tabloy/keygate/internal/middleware"
-	"github.com/tabloy/keygate/internal/model"
-	"github.com/tabloy/keygate/internal/service"
-	"github.com/tabloy/keygate/internal/store"
-	"github.com/tabloy/keygate/pkg/response"
+	"github.com/wanan9999/saas-admin/internal/config"
+	"github.com/wanan9999/saas-admin/internal/middleware"
+	"github.com/wanan9999/saas-admin/internal/model"
+	"github.com/wanan9999/saas-admin/internal/service"
+	"github.com/wanan9999/saas-admin/internal/store"
+	"github.com/wanan9999/saas-admin/pkg/response"
 )
 
 // setSecureCookie sets a cookie with SameSite=Lax for CSRF protection.

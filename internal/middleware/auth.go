@@ -10,8 +10,8 @@ import (
 	"github.com/gin-gonic/gin"
 	"github.com/golang-jwt/jwt/v5"
 
-	"github.com/tabloy/keygate/internal/model"
-	"github.com/tabloy/keygate/internal/store"
+	"github.com/wanan9999/saas-admin/internal/model"
+	"github.com/wanan9999/saas-admin/internal/store"
 )
 
 type Claims struct {

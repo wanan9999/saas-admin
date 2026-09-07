@@ -17,8 +17,8 @@ import (
 	"github.com/stripe/stripe-go/v82/checkout/session"
 	"github.com/stripe/stripe-go/v82/webhook"
 
-	"github.com/tabloy/keygate/internal/model"
-	"github.com/tabloy/keygate/internal/store"
+	"github.com/wanan9999/saas-admin/internal/model"
+	"github.com/wanan9999/saas-admin/internal/store"
 )
 
 // TestFulfillCheckout_OneLicensePerSession pins the fulfilment
@@ -82,7 +82,7 @@ func TestFulfillCheckout_OneLicensePerSession(t *testing.T) {
 }
 
 // TestFulfillCheckout_ResolvesPlanFromLineItems covers sessions that
-// were not created by Keygate (Stripe Payment Links): no plan_id
+// were not created by saas-admin (Stripe Payment Links): no plan_id
 // metadata and, for a one-time payment, no subscription either. The
 // price on the session's line items must still map to a plan
 // (issue #21). Stripe is stubbed with a local server.

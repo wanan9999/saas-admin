@@ -7,9 +7,9 @@ import (
 	"strings"
 	"time"
 
-	"github.com/tabloy/keygate/internal/model"
-	"github.com/tabloy/keygate/internal/store"
-	"github.com/tabloy/keygate/pkg/apperr"
+	"github.com/wanan9999/saas-admin/internal/model"
+	"github.com/wanan9999/saas-admin/internal/store"
+	"github.com/wanan9999/saas-admin/pkg/apperr"
 )
 
 type SeatService struct {

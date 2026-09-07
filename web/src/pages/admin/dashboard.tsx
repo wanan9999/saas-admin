@@ -1,8 +1,7 @@
 import { useQuery } from "@tanstack/react-query"
-import { Activity, ArrowUpCircle, Key, Package, Users } from "lucide-react"
+import { Activity, Key, Package, Users } from "lucide-react"
 import { Link } from "react-router-dom"
 import { Badge } from "@/components/ui/badge"
-import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import {
   DataTable,
@@ -20,12 +19,6 @@ import { formatDate, statusColor } from "@/lib/utils"
 export default function DashboardPage() {
   const { t } = useI18n()
   const { data: stats, isLoading } = useQuery({ queryKey: ["admin", "stats"], queryFn: admin.stats })
-  const { data: updateData } = useQuery({
-    queryKey: ["admin", "update-check"],
-    queryFn: admin.checkUpdate,
-    staleTime: 60 * 60 * 1000,
-  })
-
   if (isLoading || !stats) {
     return (
       <div className="animate-pulse space-y-4">
@@ -45,42 +38,6 @@ export default function DashboardPage() {
   return (
     <Page>
       <PageHeader title={t("dashboard.title")} description={t("dashboard.subtitle")} />
-
-      {updateData?.available && (
-        <div className="flex flex-col items-start gap-3 rounded-xl border border-blue-200 bg-blue-50 px-4 py-3 dark:border-blue-500/25 dark:bg-blue-500/10 sm:flex-row sm:items-center sm:justify-between">
-          <div className="flex items-center gap-3">
-            <ArrowUpCircle className="h-5 w-5 text-blue-600" />
-            <div>
-              <p className="text-sm font-medium text-blue-900 dark:text-blue-200">
-                {t("dashboard.updateAvailable", { version: updateData.latest_version })}
-              </p>
-              {updateData.update_command && (
-                <code className="mt-0.5 block font-mono text-xs text-blue-700 dark:text-blue-300">
-                  {updateData.update_command}
-                </code>
-              )}
-            </div>
-          </div>
-          <div className="flex items-center gap-2">
-            <Link to="/admin/settings?tab=system">
-              <Button
-                size="sm"
-                variant="outline"
-                className="border-blue-300 text-blue-700 dark:border-blue-500/40 dark:text-blue-300"
-              >
-                {t("dashboard.viewUpdate")}
-              </Button>
-            </Link>
-            {updateData.release_url && (
-              <a href={updateData.release_url} target="_blank" rel="noopener noreferrer">
-                <Button size="sm" className="bg-blue-600 hover:bg-blue-700">
-                  {t("dashboard.releaseNotes")}
-                </Button>
-              </a>
-            )}
-          </div>
-        </div>
-      )}
 
       <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
         {cards.map((c) => (

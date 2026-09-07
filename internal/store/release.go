@@ -7,7 +7,7 @@ import (
 
 	"github.com/uptrace/bun"
 
-	"github.com/tabloy/keygate/internal/model"
+	"github.com/wanan9999/saas-admin/internal/model"
 )
 
 // Release-related sentinel errors.

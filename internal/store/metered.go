@@ -4,7 +4,7 @@ import (
 	"context"
 	"time"
 
-	"github.com/tabloy/keygate/internal/model"
+	"github.com/wanan9999/saas-admin/internal/model"
 )
 
 // InsertMeteredEvent appends an event-log row to be pushed to Stripe

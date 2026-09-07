@@ -1,30 +1,31 @@
 <div align="center">
 
-<img src="web/public/logo.svg" width="72" height="72" alt="Keygate" />
+<img src="web/public/logo.svg" width="72" height="72" alt="saas-admin" />
 
-# Keygate
+# saas-admin
 
 **开源软件许可证管理平台。**
 
 可自托管的 Keygen、Cryptlex、LicenseSpring 替代方案。
 
-[官网](https://keygate.app) · [文档](https://keygate.app/docs) · [社区](https://github.com/tabloy/keygate/discussions)
-
-<br />
-
-<img src="web/public/screenshot.png" width="800" alt="Keygate 管理后台" />
+[官网](https://github.com/wanan9999/saas-admin) · [文档](https://github.com/wanan9999/saas-admin) · [社区](https://github.com/wanan9999/saas-admin/discussions)
 
 </div>
 
 <br />
 
-## 为什么选择 Keygate？
+## 许可证与归属
+
+本项目按 AGPL v3 及 `NOTICE` 中的附加条款发布。依法保留 [Powered by Keygate](https://keygate.app) 归属标识。
+
+
+## 为什么选择 saas-admin？
 
 你做了一款出色的软件。现在需要决定谁能用它、怎么收费、以及开放哪些功能。
 
 商业许可证平台按席位、按月收费，而且你的客户数据存储在别人的服务器上。自己开发一套需要数月的工程投入 — 激活逻辑、支付回调、配额追踪，还有凌晨两点出现的各种边界情况。
 
-**Keygate 是两者之间的最优解。** 一个生产就绪的许可证服务器，部署在你自己的基础设施上，接入你自己的 Stripe，通过简洁的管理后台统一管理。从激活到催款，全部搞定 — 让你专注于构建产品。
+**saas-admin 是两者之间的最优解。** 一个生产就绪的许可证服务器，部署在你自己的基础设施上，接入你自己的 Stripe，通过简洁的管理后台统一管理。从激活到催款，全部搞定 — 让你专注于构建产品。
 
 一个二进制文件。一个数据库。完全掌控。永久免费。
 
@@ -34,7 +35,7 @@
 
 | | |
 |:---|:---|
-| **🧑‍💻 独立开发者** — 在卖桌面应用、CLI 工具或 Electron 应用？Keygate 帮你管理许可证密钥、激活限制和试用期，让你专注发布新功能。 | **🏢 SaaS 公司** — 需要管理不同功能集的订阅层级？定义计划和权限，追踪用量，让 Stripe 自动处理计费。 |
+| **🧑‍💻 独立开发者** — 在卖桌面应用、CLI 工具或 Electron 应用？saas-admin 帮你管理许可证密钥、激活限制和试用期，让你专注发布新功能。 | **🏢 SaaS 公司** — 需要管理不同功能集的订阅层级？定义计划和权限，追踪用量，让 Stripe 自动处理计费。 |
 | **🏭 企业软件厂商** — 需要为大团队提供浮动许可？并发席位签出配合心跳监控，完美适配共享席位场景。 | **⚡ API 服务商** — 需要执行速率限制和用量配额？原子级配额执行追踪每一次调用，在客户达到限额前发出预警。 |
 
 <br />
@@ -51,7 +52,7 @@
 
 向已安装客户端推送签名更新。**Sparkle**（macOS）、**Velopack**（Windows）和 **Tauri**（跨平台）的自动更新器消费同一份 release 数据 — 一次发布，所有更新器兼容。每个 release 下挂多平台二进制，**原子发布门控**（绝不泄露半上传状态），**yank** 即时回滚。每产品 **Ed25519 签名密钥**，私钥用 AES-256-GCM + HKDF 派生子密钥落盘加密。服务端算 SHA-256（不信客户端哈希）。stable channel 公开访问 — 客户的自动更新器在 license 轮换时绝不中断。每产品 `minimum_supported_version` 强制升级下限。
 
-对象存储兼容 S3 — Cloudflare R2、AWS S3、MinIO 等任何说 SigV4 的存储。Presigned URL 浏览器直传（不经 Keygate 中转），license 校验后短期下载 URL。
+对象存储兼容 S3 — Cloudflare R2、AWS S3、MinIO 等任何说 SigV4 的存储。Presigned URL 浏览器直传（不经 saas-admin 中转），license 校验后短期下载 URL。
 
 ### 📊 用量计量
 
@@ -89,8 +90,8 @@ Stripe 端到端集成，**三层可靠性保障** — Webhook、成功页验证
 
 ```bash
 # 1. 下载
-curl -O https://raw.githubusercontent.com/tabloy/keygate/main/docker-compose.yml
-curl -O https://raw.githubusercontent.com/tabloy/keygate/main/.env.example
+curl -O https://raw.githubusercontent.com/wanan9999/saas-admin/main/docker-compose.yml
+curl -O https://raw.githubusercontent.com/wanan9999/saas-admin/main/.env.example
 cp .env.example .env
 
 # 2. 设置密钥
@@ -103,20 +104,20 @@ docker compose up -d
 ### 从源码构建
 
 ```bash
-git clone https://github.com/tabloy/keygate.git
-cd keygate && cp .env.example .env
-make build && ./bin/keygate
+git clone https://github.com/wanan9999/saas-admin.git
+cd saas-admin && cp .env.example .env
+make build && ./bin/saas-admin
 ```
 
 打开 **http://localhost:9000** — 安装向导会引导你完成初始配置。
 
-> 📖 完整文档、部署指南和 SDK 示例请访问 **[keygate.app/docs](https://keygate.app/docs)**
+> 📖 完整文档、部署指南和 SDK 示例请访问 **[项目仓库](https://github.com/wanan9999/saas-admin)**
 
 <br />
 
 ## 与竞品对比
 
-| | **Keygate** | Keygen | Cryptlex | LicenseSpring |
+| | **saas-admin** | Keygen | Cryptlex | LicenseSpring |
 |:---|:---:|:---:|:---:|:---:|
 | 开源 | **✅ AGPL v3** | 部分 | ❌ | ❌ |
 | 可自托管 | **✅** | ✅ | ❌ | ❌ |

@@ -13,8 +13,8 @@ import (
 	"github.com/stripe/stripe-go/v82"
 	stripeprice "github.com/stripe/stripe-go/v82/price"
 
-	"github.com/tabloy/keygate/internal/store"
-	"github.com/tabloy/keygate/pkg/response"
+	"github.com/wanan9999/saas-admin/internal/store"
+	"github.com/wanan9999/saas-admin/pkg/response"
 )
 
 // PublicPlansHandler serves GET /api/v1/products/:product_slug/plans —
@@ -23,7 +23,7 @@ import (
 // session, which is no use to an anonymous visitor deciding whether to
 // buy.
 //
-// Price is not a Keygate column: the Stripe Price is the source of
+// Price is not a saas-admin column: the Stripe Price is the source of
 // truth (payment.CheckoutByPlan reads it at checkout time), so this
 // handler asks Stripe and caches the answer. Without the cache every
 // anonymous page load would fan out one Stripe call per plan, which is

@@ -1,23 +1,10 @@
 <svg xmlns="http://www.w3.org/2000/svg" width="128" height="128" viewBox="0 0 128 128" fill="none">
   <defs>
-    <linearGradient id="shield" x1="64" y1="8" x2="64" y2="120" gradientUnits="userSpaceOnUse">
-      <stop stop-color="#8b5cf6"/>
-      <stop offset="1" stop-color="#6d28d9"/>
-    </linearGradient>
-    <linearGradient id="shieldLight" x1="16" y1="28" x2="64" y2="120" gradientUnits="userSpaceOnUse">
-      <stop stop-color="#a78bfa"/>
+    <linearGradient id="brand" x1="18" y1="12" x2="110" y2="116" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#4f46e5"/>
       <stop offset="1" stop-color="#7c3aed"/>
     </linearGradient>
   </defs>
-  <!-- Shield body -->
-  <path d="M64 8L16 28v36c0 30.92 20.48 59.84 48 68 27.52-8.16 48-37.08 48-68V28L64 8z" fill="url(#shield)"/>
-  <!-- Shield left highlight -->
-  <path d="M64 8L16 28v36c0 30.92 20.48 59.84 48 68V8z" fill="url(#shieldLight)"/>
-  <!-- Key ring -->
-  <circle cx="64" cy="52" r="14" fill="none" stroke="white" stroke-width="7" stroke-linecap="round"/>
-  <!-- Key shaft -->
-  <rect x="60" y="64" width="8" height="32" rx="4" fill="white"/>
-  <!-- Key teeth -->
-  <rect x="68" y="80" width="12" height="7" rx="3.5" fill="white"/>
-  <rect x="68" y="89" width="8" height="7" rx="3.5" fill="white"/>
+  <rect x="8" y="8" width="112" height="112" rx="30" fill="url(#brand)"/>
+  <path d="M88 41.5C82.5 35.2 74.2 32 63.3 32 48.8 32 39 39.4 39 50.1c0 10.1 7.3 15.4 22.8 18.2 10.1 1.8 13.3 4 13.3 8.3 0 4.8-4.6 7.6-12.4 7.6-9 0-16.4-3.1-22.3-9.2L32 86.2C39.6 94.1 49.7 98 62.4 98 78.8 98 89 90.2 89 77.7c0-10.8-6.8-16.1-22.9-19-10.2-1.9-13.4-3.7-13.4-7.5 0-3.7 4-6 10.4-6 7.5 0 13.3 2.4 17.9 7.1L88 41.5Z" fill="white"/>
 </svg>

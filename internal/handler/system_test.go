@@ -2,6 +2,13 @@ package handler
 
 import "testing"
 
+func TestSystemHandlerUsesSaasAdminRepository(t *testing.T) {
+	h := NewSystemHandler(nil)
+	if h.RepoOwner != "wanan9999" || h.RepoName != "saas-admin" {
+		t.Fatalf("repository = %s/%s, want wanan9999/saas-admin", h.RepoOwner, h.RepoName)
+	}
+}
+
 func TestSemverNewer(t *testing.T) {
 	tests := []struct {
 		latest, current string

@@ -9,7 +9,7 @@ import (
 	"strings"
 	"time"
 
-	"github.com/tabloy/keygate/internal/model"
+	"github.com/wanan9999/saas-admin/internal/model"
 )
 
 // FeedFormat is the wire format requested by an auto-update client.
@@ -19,7 +19,7 @@ const (
 	FeedFormatSparkle  FeedFormat = "sparkle"
 	FeedFormatVelopack FeedFormat = "velopack"
 	FeedFormatTauri    FeedFormat = "tauri"
-	FeedFormatJSON     FeedFormat = "json" // Keygate-native debug format
+	FeedFormatJSON     FeedFormat = "json" // saas-admin-native debug format
 )
 
 // IsValidFeedFormat reports whether f is one of the supported formats.
@@ -39,7 +39,7 @@ func IsValidFeedFormat(f FeedFormat) bool {
 type FeedInput struct {
 	ProductID   string
 	ProductName string
-	BaseURL     string // public origin, e.g. https://keygate.app — used for atom links
+	BaseURL     string // public origin, e.g. https://licenses.example.com — used for atom links
 	Releases    []*FeedRelease
 
 	// MinimumSupportedVersion: optional product-level version floor.
@@ -282,7 +282,7 @@ func velopackFilename(rel *model.Release, a *model.ReleaseArtifact) string {
 
 // TauriManifest is the single-release JSON Tauri's updater consumes.
 //
-// MinimumSupportedVersion + MinimumSupportedMessage are Keygate
+// MinimumSupportedVersion + MinimumSupportedMessage are saas-admin
 // extensions: clients we ship with the official SDK refuse to run an
 // installed build below this version. Tauri itself ignores unknown
 // fields, so adding them is forward-compatible.

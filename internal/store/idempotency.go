@@ -7,7 +7,7 @@ import (
 	"strings"
 	"time"
 
-	"github.com/tabloy/keygate/internal/model"
+	"github.com/wanan9999/saas-admin/internal/model"
 )
 
 // Idempotency sentinel errors. Surfaced by the middleware to map onto

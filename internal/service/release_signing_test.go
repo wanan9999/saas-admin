@@ -11,8 +11,8 @@ import (
 	"testing"
 	"time"
 
-	"github.com/tabloy/keygate/internal/crypto"
-	"github.com/tabloy/keygate/internal/storage"
+	"github.com/wanan9999/saas-admin/internal/crypto"
+	"github.com/wanan9999/saas-admin/internal/storage"
 )
 
 // fakeStorage is a tiny in-memory Storage for tests.

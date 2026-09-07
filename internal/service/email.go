@@ -14,8 +14,8 @@ import (
 	"strings"
 	"time"
 
-	"github.com/tabloy/keygate/internal/branding"
-	"github.com/tabloy/keygate/internal/store"
+	"github.com/wanan9999/saas-admin/internal/branding"
+	"github.com/wanan9999/saas-admin/internal/store"
 )
 
 // emailFooter returns the attribution footer appended to all outgoing emails.
@@ -149,7 +149,7 @@ func (s *EmailService) Send(to, subject, htmlBody string) error {
 // genuinely want plaintext auth can run their own postfix in front.
 func (s *EmailService) sendOnce(addr, to string, msg []byte) error {
 	// The SMTP envelope sender (MAIL FROM, RFC 5321) must be a BARE
-	// address — "noreply@x.com", never "Keygate <noreply@x.com>".
+// address — "noreply@x.com", never "Example <noreply@x.com>".
 	// The display-name form is only legal in the RFC 5322 "From:"
 	// header (which Send() builds separately). Strict MTAs like
 	// Postmark reject a display-name envelope with
@@ -301,11 +301,11 @@ func (a *loginAuth) Next(fromServer []byte, more bool) ([]byte, error) {
 // put in SMTP_FROM:
 //
 //	"noreply@example.com"               → noreply@example.com
-//	"Keygate <noreply@example.com>"     → noreply@example.com
-//	"\"Keygate Billing\" <a@b.com>"     → a@b.com
+//	"Example <noreply@example.com>"     → noreply@example.com
+//	"\"Example Billing\" <a@b.com>"     → a@b.com
 //
 // The display-name form is kept verbatim in the message's "From:"
-// header (built in Send) so recipients still see "Keygate"; only the
+// header (built in Send) so recipients still see the display name; only the
 // envelope is stripped to the bare address.
 func parseEnvelopeAddress(from string) (string, error) {
 	from = strings.TrimSpace(from)
@@ -504,7 +504,7 @@ func (s *EmailService) SendDunningFinal(to, productName string) {
 	}()
 }
 
-// SendAdminInvite notifies a Keygate platform operator that they
+// SendAdminInvite notifies a platform operator that they
 // were added (or promoted) to the admin team. The "invite" is
 // really a role grant — the recipient can log in via email-OTP
 // immediately and the email's job is just to tell them that
@@ -549,12 +549,12 @@ func (s *EmailService) SendPaymentRecovered(to, productName string) {
 func (s *EmailService) SendWelcome(to, name string) {
 	body := `<!DOCTYPE html>
 <html><body style="font-family: -apple-system, sans-serif; max-width: 600px; margin: 0 auto; padding: 20px;">
-<h2>Welcome to Keygate!</h2>
+<h2>Welcome to ` + branding.Project + `!</h2>
 <p>Hi ` + name + `, your account has been created.</p>
 <p>You can manage your licenses and subscriptions from your portal.</p>
 </body></html>`
 	go func() {
-		if err := s.Send(to, "Welcome to Keygate", body); err != nil {
+		if err := s.Send(to, "Welcome to "+branding.Project, body); err != nil {
 			s.logger.Error("email delivery failed", "to", to, "error", err)
 		}
 	}()

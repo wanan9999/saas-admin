@@ -13,8 +13,10 @@ import (
 const SubkeyBytes = 32
 
 // purposePrefix is prepended to every purpose string so the same master
-// across two Keygate versions cannot accidentally produce the same subkey
+// across two application versions cannot accidentally produce the same subkey
 // for "license-key" if the protocol changes.
+// Compatibility invariant: changing this value makes existing encrypted data
+// undecryptable. It is a cryptographic domain separator, not UI branding.
 const purposePrefix = "keygate-v1-"
 
 // DeriveSubkey produces a 32-byte subkey from the master key, deterministically

@@ -2,8 +2,8 @@ root = "."
 tmp_dir = "tmp"
 
 [build]
-  cmd = "go build -o ./tmp/keygate ./cmd/server"
-  entrypoint = "./tmp/keygate"
+  cmd = "go build -o ./tmp/saas-admin ./cmd/server"
+  entrypoint = "./tmp/saas-admin"
   include_ext = ["go"]
   exclude_dir = ["tmp", "bin", "web", "node_modules", "vendor"]
   delay = 500

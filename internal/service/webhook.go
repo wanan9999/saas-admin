@@ -23,9 +23,9 @@ import (
 	"golang.org/x/net/http/httpproxy"
 	"golang.org/x/net/idna"
 
-	"github.com/tabloy/keygate/internal/middleware"
-	"github.com/tabloy/keygate/internal/model"
-	"github.com/tabloy/keygate/internal/store"
+	"github.com/wanan9999/saas-admin/internal/middleware"
+	"github.com/wanan9999/saas-admin/internal/model"
+	"github.com/wanan9999/saas-admin/internal/store"
 )
 
 type WebhookService struct {
@@ -476,7 +476,7 @@ func (s *WebhookService) DeliverTest(ctx context.Context, wh *model.Webhook) (*m
 			"timestamp": time.Now().UTC().Format(time.RFC3339),
 			"data": map[string]any{
 				"webhook_id": wh.ID,
-				"message":    "This is a test delivery from Keygate.",
+				"message":    "This is a test delivery from saas-admin.",
 			},
 		},
 	}
@@ -506,6 +506,8 @@ func (s *WebhookService) deliver(ctx context.Context, wh *model.Webhook, deliver
 		return
 	}
 	req.Header.Set("Content-Type", "application/json")
+	// These names are the established webhook wire contract. Renaming them as
+	// part of a visual rebrand would silently break every existing consumer.
 	req.Header.Set("X-Keygate-Event", delivery.Event)
 	req.Header.Set("X-Keygate-Signature", "sha256="+sig)
 	req.Header.Set("X-Keygate-Delivery", delivery.ID)

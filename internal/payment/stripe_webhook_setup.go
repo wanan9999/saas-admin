@@ -127,8 +127,10 @@ func (h *StripeHandler) ensureWebhookEndpointLocked(ctx context.Context) error {
 		URL:           stripe.String(webhookURL),
 		EnabledEvents: stripeWebhookEvents,
 		APIVersion:    stripe.String(stripe.APIVersion),
-		Description:   stripe.String("Keygate auto-managed webhook"),
-		Metadata:      map[string]string{"managed_by": "keygate"},
+		Description:   stripe.String("saas-admin auto-managed webhook"),
+		// The metadata value is a stable external ownership marker used by
+		// existing Stripe endpoints; it is intentionally not display branding.
+		Metadata: map[string]string{"managed_by": "keygate"},
 	})
 	if err != nil {
 		return fmt.Errorf("create stripe webhook endpoint: %w", err)

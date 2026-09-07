@@ -6,9 +6,9 @@ import (
 
 	"github.com/gin-gonic/gin"
 
-	"github.com/tabloy/keygate/internal/service"
-	"github.com/tabloy/keygate/pkg/apperr"
-	"github.com/tabloy/keygate/pkg/response"
+	"github.com/wanan9999/saas-admin/internal/service"
+	"github.com/wanan9999/saas-admin/pkg/apperr"
+	"github.com/wanan9999/saas-admin/pkg/response"
 )
 
 const maxIdentifierLen = 256

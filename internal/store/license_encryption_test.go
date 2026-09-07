@@ -4,8 +4,8 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/tabloy/keygate/internal/crypto"
-	"github.com/tabloy/keygate/internal/model"
+	"github.com/wanan9999/saas-admin/internal/crypto"
+	"github.com/wanan9999/saas-admin/internal/model"
 )
 
 // These tests don't require a DB — they exercise the in-memory AEAD path

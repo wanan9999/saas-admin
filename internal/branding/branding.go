@@ -4,12 +4,21 @@
 // attribution obligation under AGPL v3 Section 7(b) — see NOTICE.
 package branding
 
-// Core identity — referenced by handlers, middleware, and templates.
+// Application identity. Attribution is intentionally kept separate: the
+// project's AGPL v3 Section 7(b) notice must remain "Powered by Keygate" even
+// when the application is distributed under another name.
+const (
+	Project       = "saas-admin"
+	RepositoryURL = "https://github.com/wanan9999/saas-admin"
+)
+
+// Legally required attribution identity — referenced by middleware, public
+// config responses, and email templates.
 var (
-	Project = segs[0] + segs[1]          // "Keygate"
-	Domain  = lower0 + segs[1] + segs[2] // "keygate.app"
-	URL     = proto + Domain             // "https://keygate.app"
-	Tagline = pwrd + " " + Project       // "Powered by Keygate"
+	AttributionProject = segs[0] + segs[1]               // "Keygate"
+	Domain             = lower0 + segs[1] + segs[2]      // "keygate.app"
+	URL                = proto + Domain                  // "https://keygate.app"
+	Tagline            = pwrd + " " + AttributionProject // "Powered by Keygate"
 )
 
 // HTTP header values.

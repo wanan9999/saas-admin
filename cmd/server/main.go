@@ -20,19 +20,19 @@ import (
 	"github.com/prometheus/client_golang/prometheus/promhttp"
 	"github.com/stripe/stripe-go/v82"
 
-	"github.com/tabloy/keygate/internal/branding"
-	"github.com/tabloy/keygate/internal/config"
-	"github.com/tabloy/keygate/internal/crypto"
-	"github.com/tabloy/keygate/internal/handler"
-	"github.com/tabloy/keygate/internal/license"
-	"github.com/tabloy/keygate/internal/middleware"
-	"github.com/tabloy/keygate/internal/model"
-	"github.com/tabloy/keygate/internal/payment"
-	"github.com/tabloy/keygate/internal/service"
-	"github.com/tabloy/keygate/internal/storage"
-	"github.com/tabloy/keygate/internal/store"
-	"github.com/tabloy/keygate/internal/version"
-	"github.com/tabloy/keygate/pkg/response"
+	"github.com/wanan9999/saas-admin/internal/branding"
+	"github.com/wanan9999/saas-admin/internal/config"
+	"github.com/wanan9999/saas-admin/internal/crypto"
+	"github.com/wanan9999/saas-admin/internal/handler"
+	"github.com/wanan9999/saas-admin/internal/license"
+	"github.com/wanan9999/saas-admin/internal/middleware"
+	"github.com/wanan9999/saas-admin/internal/model"
+	"github.com/wanan9999/saas-admin/internal/payment"
+	"github.com/wanan9999/saas-admin/internal/service"
+	"github.com/wanan9999/saas-admin/internal/storage"
+	"github.com/wanan9999/saas-admin/internal/store"
+	"github.com/wanan9999/saas-admin/internal/version"
+	"github.com/wanan9999/saas-admin/pkg/response"
 )
 
 func main() {
@@ -274,8 +274,6 @@ func main() {
 
 	go emailSvc.StartEmailQueueProcessor(ctx, db)
 
-	go systemH.StartAutoCheck(ctx.Done())
-
 	// Cleanup expired transient rows every hour. Grouped together
 	// because each table grows unboundedly otherwise:
 	//   - OTP codes: short TTL, but new rows on every login attempt.
@@ -347,7 +345,7 @@ func main() {
 
 	// Security headers & attribution (AGPL v3 Section 7b — see NOTICE)
 	r.Use(func(c *gin.Context) {
-		c.Header(branding.HeaderKey, branding.Project)
+		c.Header(branding.HeaderKey, branding.AttributionProject)
 		c.Header("X-Frame-Options", "DENY")
 		c.Header("X-Content-Type-Options", "nosniff")
 		c.Header("X-XSS-Protection", "1; mode=block")
@@ -405,7 +403,7 @@ func main() {
 	r.GET("/docs", func(c *gin.Context) {
 		c.Data(http.StatusOK, "text/html; charset=utf-8", []byte(`<!DOCTYPE html>
 <html><head>
-<title>Keygate API</title>
+<title>saas-admin API</title>
 <meta charset="utf-8"/>
 <meta name="viewport" content="width=device-width,initial-scale=1"/>
 </head><body>
@@ -985,7 +983,7 @@ func main() {
 	}
 
 	go func() {
-		log.Printf("Keygate starting on :%s", cfg.Port)
+		log.Printf("saas-admin starting on :%s", cfg.Port)
 		if err := srv.ListenAndServe(); err != nil && err != http.ErrServerClosed {
 			log.Fatalf("server: %v", err)
 		}

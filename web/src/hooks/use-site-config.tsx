@@ -13,7 +13,7 @@ interface SiteConfig {
 }
 
 const defaults: SiteConfig = {
-  site_name: "Keygate",
+  site_name: "saas-admin",
   brand_color: "",
   logo_url: "",
   timezone: "UTC",
@@ -33,7 +33,7 @@ export function SiteConfigProvider({ children }: { children: ReactNode }) {
       .config()
       .then((data) => {
         setConfig({
-          site_name: data.site_name || "Keygate",
+          site_name: data.site_name || "saas-admin",
           brand_color: data.brand_color || "",
           logo_url: data.logo_url || "",
           timezone: data.timezone || "UTC",
@@ -59,8 +59,8 @@ export function SiteConfigProvider({ children }: { children: ReactNode }) {
           document.title = data.site_name
         }
         // Set default language if user hasn't explicitly chosen one
-        if (data.language && !localStorage.getItem("keygate_locale")) {
-          localStorage.setItem("keygate_locale", data.language)
+        if (data.language && !localStorage.getItem("saas-admin_locale")) {
+          localStorage.setItem("saas-admin_locale", data.language)
           document.documentElement.lang = data.language
         }
       })

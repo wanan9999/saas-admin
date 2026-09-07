@@ -6,9 +6,9 @@ import (
 	"log/slog"
 	"strconv"
 
-	"github.com/tabloy/keygate/internal/model"
-	"github.com/tabloy/keygate/internal/store"
-	"github.com/tabloy/keygate/pkg/apperr"
+	"github.com/wanan9999/saas-admin/internal/model"
+	"github.com/wanan9999/saas-admin/internal/store"
+	"github.com/wanan9999/saas-admin/pkg/apperr"
 )
 
 type UsageService struct {
@@ -116,7 +116,7 @@ func (s *UsageService) RecordUsage(ctx context.Context, in RecordUsageInput) (*R
 	// rows to Stripe's Billing Meter API; pushing absolutes here
 	// would double-count because Stripe accumulates server-side.
 	//
-	// Best-effort: a failure here doesn't roll back the in-Keygate
+	// Best-effort: a failure here doesn't roll back the in-saas-admin
 	// accounting (we'd rather over-grant than under-bill on a
 	// transient blip; the next RecordUsage isn't affected).
 	if quota.StripeMeterEventName != "" {

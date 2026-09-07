@@ -1,4 +1,4 @@
--- Keygate: License Management Platform
+-- saas-admin: License Management Platform
 -- Migration: initial schema
 
 -- ─── Users & OAuth ───

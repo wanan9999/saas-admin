@@ -3,8 +3,8 @@ package handler
 import (
 	"github.com/gin-gonic/gin"
 
-	"github.com/tabloy/keygate/internal/service"
-	"github.com/tabloy/keygate/pkg/response"
+	"github.com/wanan9999/saas-admin/internal/service"
+	"github.com/wanan9999/saas-admin/pkg/response"
 )
 
 type SeatHandler struct {

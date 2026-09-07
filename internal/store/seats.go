@@ -9,7 +9,7 @@ import (
 	"errors"
 	"time"
 
-	"github.com/tabloy/keygate/internal/model"
+	"github.com/wanan9999/saas-admin/internal/model"
 )
 
 // SeatInviteTTL is how long a freshly-minted invite token stays

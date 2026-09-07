@@ -8,7 +8,7 @@ import (
 	"testing"
 	"time"
 
-	"github.com/tabloy/keygate/internal/model"
+	"github.com/wanan9999/saas-admin/internal/model"
 )
 
 // validBase64Sig generates a syntactically valid 64-byte Ed25519 signature in

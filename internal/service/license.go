@@ -9,12 +9,12 @@ import (
 	"log/slog"
 	"time"
 
-	"github.com/tabloy/keygate/internal/branding"
-	"github.com/tabloy/keygate/internal/license"
-	"github.com/tabloy/keygate/internal/middleware"
-	"github.com/tabloy/keygate/internal/model"
-	"github.com/tabloy/keygate/internal/store"
-	"github.com/tabloy/keygate/pkg/apperr"
+	"github.com/wanan9999/saas-admin/internal/branding"
+	"github.com/wanan9999/saas-admin/internal/license"
+	"github.com/wanan9999/saas-admin/internal/middleware"
+	"github.com/wanan9999/saas-admin/internal/model"
+	"github.com/wanan9999/saas-admin/internal/store"
+	"github.com/wanan9999/saas-admin/pkg/apperr"
 )
 
 // FailureTracker tracks failed authentication attempts for brute-force protection.
@@ -518,7 +518,7 @@ func (s *LicenseService) entitlements(lic *model.License) map[string]any {
 }
 
 func responseMeta() map[string]any {
-	return map[string]any{"server": branding.Project, "url": branding.URL}
+	return map[string]any{"server": branding.Project, "url": branding.RepositoryURL}
 }
 
 // tokenTTL is the default check-in interval: how long a signed token

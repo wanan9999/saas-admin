@@ -5,7 +5,7 @@ import (
 	"testing"
 	"time"
 
-	"github.com/tabloy/keygate/internal/model"
+	"github.com/wanan9999/saas-admin/internal/model"
 )
 
 // Login upserts the user with nothing but an email — OTP has no name to

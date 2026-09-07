@@ -1,4 +1,4 @@
-module github.com/tabloy/keygate
+module github.com/wanan9999/saas-admin
 
 go 1.25.0
 

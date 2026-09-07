@@ -17,10 +17,10 @@ import (
 
 	"golang.org/x/mod/semver"
 
-	"github.com/tabloy/keygate/internal/model"
-	"github.com/tabloy/keygate/internal/storage"
-	"github.com/tabloy/keygate/internal/store"
-	"github.com/tabloy/keygate/pkg/apperr"
+	"github.com/wanan9999/saas-admin/internal/model"
+	"github.com/wanan9999/saas-admin/internal/storage"
+	"github.com/wanan9999/saas-admin/internal/store"
+	"github.com/wanan9999/saas-admin/pkg/apperr"
 )
 
 // maxFinalizeReadSize caps how many bytes FinalizeArtifact will stream

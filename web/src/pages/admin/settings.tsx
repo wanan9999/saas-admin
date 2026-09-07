@@ -114,15 +114,11 @@ export default function SettingsPage() {
     queryFn: admin.getVersion,
   })
 
-  const {
-    data: updateData,
-    refetch: recheckUpdate,
-    isFetching: updateChecking,
-  } = useQuery({
-    queryKey: ["admin", "update-check"],
-    queryFn: admin.checkUpdate,
-    staleTime: 60 * 60 * 1000, // cache 1 hour
+  const updateCheckMut = useMutation({
+    mutationFn: admin.checkUpdate,
   })
+  const updateData = updateCheckMut.data
+  const updateChecking = updateCheckMut.isPending
 
   const set = (key: FormKey, value: string) => setForm((f) => ({ ...f, [key]: value }))
 
@@ -176,7 +172,7 @@ export default function SettingsPage() {
                   <Input
                     value={form.site_name || ""}
                     onChange={(e) => set("site_name", e.target.value)}
-                    placeholder="Keygate"
+                    placeholder="saas-admin"
                   />
                   <p className="text-xs text-muted-foreground">{t("settings.siteNameDesc")}</p>
                 </div>
@@ -417,7 +413,7 @@ export default function SettingsPage() {
               </div>
 
               <div className="flex items-center gap-3 pt-2">
-                <Button variant="outline" size="sm" onClick={() => recheckUpdate()} disabled={updateChecking}>
+                <Button variant="outline" size="sm" onClick={() => updateCheckMut.mutate()} disabled={updateChecking}>
                   <RefreshCw className={`h-4 w-4 mr-2 ${updateChecking ? "animate-spin" : ""}`} />
                   {t("settings.checkUpdate")}
                 </Button>

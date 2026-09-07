@@ -15,12 +15,13 @@ import (
 	"github.com/gin-gonic/gin"
 	"github.com/stripe/stripe-go/v82/subscription"
 
-	"github.com/tabloy/keygate/internal/license"
-	"github.com/tabloy/keygate/internal/model"
-	"github.com/tabloy/keygate/internal/service"
-	"github.com/tabloy/keygate/internal/store"
-	"github.com/tabloy/keygate/pkg/apperr"
-	"github.com/tabloy/keygate/pkg/response"
+	"github.com/wanan9999/saas-admin/internal/branding"
+	"github.com/wanan9999/saas-admin/internal/license"
+	"github.com/wanan9999/saas-admin/internal/model"
+	"github.com/wanan9999/saas-admin/internal/service"
+	"github.com/wanan9999/saas-admin/internal/store"
+	"github.com/wanan9999/saas-admin/pkg/apperr"
+	"github.com/wanan9999/saas-admin/pkg/response"
 )
 
 type AdminHandler struct {
@@ -565,7 +566,7 @@ func isStripePriceConflict(err error) bool {
 }
 
 // stripePriceTaken rejects a Stripe price already mapped to another
-// plan. Checkout sessions created outside Keygate (Payment Links)
+// plan. Checkout sessions created outside saas-admin (Payment Links)
 // resolve their plan by price alone, so the mapping must be unique.
 // Writes the 409 response itself and reports whether it did.
 func (h *AdminHandler) stripePriceTaken(c *gin.Context, priceID, exceptPlanID string) bool {
@@ -954,7 +955,7 @@ func (h *AdminHandler) CreateLicense(c *gin.Context) {
 		response.BadRequest(c, appErr.Message)
 		return
 	}
-	// External IDs are opaque to Keygate but we cap their length to
+	// External IDs are opaque to saas-admin but we cap their length to
 	// keep them index-friendly. 256 chars is comfortably above what
 	// any real identifier scheme produces (UUIDs, Stripe IDs, etc).
 	if len(req.ExternalCustomerID) > 256 {
@@ -2152,8 +2153,8 @@ func (h *AdminHandler) SendTestEmail(c *gin.Context) {
 		return
 	}
 	if err := h.Email.Send(to,
-		"Keygate test email",
-		`<p>Hello! This is a test email from Keygate.</p>`+
+		branding.Project+" test email",
+		`<p>Hello! This is a test email from `+branding.Project+`.</p>`+
 			`<p>If you can read this, your SMTP setup is working.</p>`); err != nil {
 		response.Err(c, http.StatusBadGateway, "EMAIL_SEND_FAILED", err.Error())
 		return
@@ -2276,11 +2277,11 @@ func (h *AdminHandler) InviteTeamMember(c *gin.Context) {
 	// does NOT roll back the role grant (OTP login still works
 	// out-of-band). The inviter (actor) name is shown so the
 	// recipient knows who added them, which helps spot social
-	// engineering ("why am I suddenly admin on Keygate?").
+	// engineering ("why am I suddenly an admin?").
 	if roleChanged && h.Email != nil && h.Email.IsConfigured() {
 		siteName, _ := h.Store.GetSetting(c, "site_name")
 		if siteName == "" {
-			siteName = "Keygate"
+			siteName = branding.Project
 		}
 		baseURL, _ := h.Store.GetSetting(c, "base_url")
 		if baseURL == "" {
@@ -2389,7 +2390,7 @@ func (h *AdminHandler) ExportLicenses(c *gin.Context) {
 	}
 
 	// The export deliberately carries plaintext keys — that is its
-	// purpose, e.g. migrating off Keygate. But it is a bulk credential
+	// purpose, e.g. migrating off saas-admin. But it is a bulk credential
 	// dump, so unlike a single reveal it must leave a trace of who
 	// pulled it and how much.
 	h.Store.Audit(c, &model.AuditLog{

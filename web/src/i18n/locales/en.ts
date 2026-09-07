@@ -56,7 +56,6 @@ const en = {
   "nav.insights": "Insights",
   "nav.customers": "Customers",
   "nav.settings": "Settings",
-  "nav.sponsor": "Sponsor Us",
   "nav.portal": "User Portal",
   "nav.logout": "Logout",
 
@@ -69,9 +68,6 @@ const en = {
   "dashboard.subtitle": "Overview of your license management system.",
   "dashboard.statusDistribution": "License Status Distribution",
   "dashboard.recentLicenses": "Recent Licenses",
-  "dashboard.updateAvailable": "Keygate {version} is available.",
-  "dashboard.viewUpdate": "View Details",
-  "dashboard.releaseNotes": "Release Notes",
 
   // Products
   "products.title": "Products",
@@ -339,7 +335,7 @@ const en = {
   "settings.brandColor": "Brand Color",
   "settings.brandColorDesc": "Primary color used throughout the interface. Leave empty for default.",
   "settings.logoUrl": "Custom Logo URL",
-  "settings.logoUrlDesc": "URL to your logo (SVG recommended). Leave empty for default Keygate logo.",
+  "settings.logoUrlDesc": "URL to your logo (SVG recommended). Leave empty for the default saas-admin logo.",
   "settings.emailConfigured": "Outgoing email is configured.",
   "settings.emailNotConfigured":
     "Outgoing email is not configured — customers will not receive license or invite emails.",

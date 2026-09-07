@@ -5,8 +5,8 @@ import (
 	"testing"
 	"time"
 
-	"github.com/tabloy/keygate/internal/license"
-	"github.com/tabloy/keygate/internal/model"
+	"github.com/wanan9999/saas-admin/internal/license"
+	"github.com/wanan9999/saas-admin/internal/model"
 )
 
 func TestAssertUsable(t *testing.T) {

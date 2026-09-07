@@ -7,7 +7,7 @@ interface ThemeContextValue {
   setTheme: (theme: Theme) => void
 }
 
-const STORAGE_KEY = "keygate-theme"
+const STORAGE_KEY = "saas-admin-theme"
 const ThemeContext = createContext<ThemeContextValue | null>(null)
 const systemTheme = () => (window.matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light")
 

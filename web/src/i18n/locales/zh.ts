@@ -55,7 +55,6 @@ const zh = {
   "nav.insights": "数据洞察",
   "nav.customers": "客户管理",
   "nav.settings": "系统设置",
-  "nav.sponsor": "赞助我们",
   "nav.portal": "用户门户",
   "nav.logout": "退出登录",
 
@@ -68,9 +67,6 @@ const zh = {
   "dashboard.subtitle": "许可证管理系统概览。",
   "dashboard.statusDistribution": "许可证状态分布",
   "dashboard.recentLicenses": "最近许可证",
-  "dashboard.updateAvailable": "Keygate {version} 新版本可用。",
-  "dashboard.viewUpdate": "查看详情",
-  "dashboard.releaseNotes": "更新日志",
 
   // Products
   "products.title": "产品管理",
@@ -330,7 +326,7 @@ const zh = {
   "settings.brandColor": "品牌颜色",
   "settings.brandColorDesc": "整个界面使用的主色调。留空则使用默认紫色。",
   "settings.logoUrl": "自定义 Logo URL",
-  "settings.logoUrlDesc": "Logo 图片的 URL（推荐 SVG 格式）。留空则使用默认 Keygate Logo。",
+  "settings.logoUrlDesc": "Logo 图片的 URL（推荐 SVG 格式）。留空则使用默认 saas-admin Logo。",
   "settings.emailConfigured": "外发邮件已配置。",
   "settings.emailNotConfigured": "外发邮件未配置，客户不会收到授权和邀请邮件。",
   "settings.emailEnvHint":

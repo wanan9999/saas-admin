@@ -3,12 +3,18 @@ package branding_test
 import (
 	"testing"
 
-	"github.com/tabloy/keygate/internal/branding"
+	"github.com/wanan9999/saas-admin/internal/branding"
 )
 
 func TestBrandingValues(t *testing.T) {
-	if branding.Project != "Keygate" {
+	if branding.Project != "saas-admin" {
 		t.Errorf("Project = %q", branding.Project)
+	}
+	if branding.RepositoryURL != "https://github.com/wanan9999/saas-admin" {
+		t.Errorf("RepositoryURL = %q", branding.RepositoryURL)
+	}
+	if branding.AttributionProject != "Keygate" {
+		t.Errorf("AttributionProject = %q", branding.AttributionProject)
 	}
 	if branding.Domain != "keygate.app" {
 		t.Errorf("Domain = %q", branding.Domain)
