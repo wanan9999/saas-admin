@@ -1,7 +1,7 @@
 services:
   saas-admin:
-    image: ghcr.io/wanan9999/saas-admin:latest
-    # build: .  # uncomment to build from source
+    # image: ghcr.io/wanan9999/saas-admin:latest
+    build: .
     ports:
       - "9000:9000"
     environment:
@@ -37,16 +37,11 @@ services:
       POSTGRES_PASSWORD: keygate
       POSTGRES_DB: keygate
     volumes:
-      # postgres:18+ images expect the volume mounted at /var/lib/postgresql
-      # (data lives in a versioned subdirectory); mounting .../data makes
-      # initdb fail on a fresh volume. https://github.com/docker-library/postgres/issues/37
-      - pgdata:/var/lib/postgresql
+      # postgres:18+ 镜像期望将卷挂载在 /var/lib/postgresql
+      - ./pgdata:/var/lib/postgresql
     healthcheck:
       test: ["CMD-SHELL", "pg_isready -U keygate"]
       interval: 10s
       timeout: 5s
       retries: 5
     restart: unless-stopped
-
-volumes:
-  pgdata:
