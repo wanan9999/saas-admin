@@ -41,6 +41,7 @@ import {
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from "@/components/ui/dialog"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
+import { FilterBar, Page, PageHeader } from "@/components/ui/page"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
 import { useI18n } from "@/i18n"
 import { admin, type WebhookConfig } from "@/lib/api"
@@ -138,11 +139,8 @@ export default function WebhooksPage() {
 
   if (products.length === 0 && !isLoading) {
     return (
-      <div className="space-y-6">
-        <div>
-          <h1 className="text-2xl font-bold tracking-tight">{t("webhooks.title")}</h1>
-          <p className="text-muted-foreground">{t("webhooks.subtitle")}</p>
-        </div>
+      <Page>
+        <PageHeader title={t("webhooks.title")} description={t("webhooks.subtitle")} />
         <Card>
           <CardContent className="py-12 text-center">
             <Package className="h-12 w-12 mx-auto text-muted-foreground mb-4" />
@@ -155,23 +153,24 @@ export default function WebhooksPage() {
             </Button>
           </CardContent>
         </Card>
-      </div>
+      </Page>
     )
   }
 
   return (
-    <div className="space-y-6">
-      <div className="flex items-center justify-between">
-        <div>
-          <h1 className="text-2xl font-bold tracking-tight">{t("webhooks.title")}</h1>
-          <p className="text-muted-foreground">{t("webhooks.subtitle")}</p>
-        </div>
-        <Button onClick={() => setCreating(true)}>
-          <Plus className="h-4 w-4 mr-2" /> {t("webhooks.new")}
-        </Button>
-      </div>
+    <Page>
+      <PageHeader
+        title={t("webhooks.title")}
+        description={t("webhooks.subtitle")}
+        actions={
+          <Button onClick={() => setCreating(true)}>
+            <Plus />
+            {t("webhooks.new")}
+          </Button>
+        }
+      />
 
-      <div className="flex gap-4">
+      <FilterBar>
         <Select value={productFilter} onValueChange={(v) => setProductFilter(v === "all" ? "" : v)}>
           <SelectTrigger className="w-48">
             <SelectValue placeholder={t("filter.allProducts")} />
@@ -191,7 +190,7 @@ export default function WebhooksPage() {
           onChange={(e) => setSearch(e.target.value)}
           className="w-64"
         />
-      </div>
+      </FilterBar>
 
       <Card>
         <CardContent className="pt-6">
@@ -335,7 +334,7 @@ export default function WebhooksPage() {
           </div>
         </AlertDialogContent>
       </AlertDialog>
-    </div>
+    </Page>
   )
 }
 
@@ -396,7 +395,7 @@ function CreateWebhookDialog({
           </div>
           <div className="space-y-2">
             <Label>{t("webhooks.events")}</Label>
-            <div className="grid grid-cols-2 gap-2">
+            <div className="grid grid-cols-1 gap-2 sm:grid-cols-2">
               {WEBHOOK_EVENTS.map((event) => (
                 <label
                   key={event}

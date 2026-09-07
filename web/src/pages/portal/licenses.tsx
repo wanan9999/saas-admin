@@ -17,6 +17,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from "@/components/ui/dialog"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
+import { Page, PageHeader } from "@/components/ui/page"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
 import { Separator } from "@/components/ui/separator"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
@@ -45,11 +46,8 @@ export default function PortalLicensesPage() {
   }
 
   return (
-    <div className="space-y-6">
-      <div>
-        <h1 className="text-2xl font-bold tracking-tight">{t("portal.myLicenses")}</h1>
-        <p className="text-muted-foreground">{t("portal.myLicensesDesc")}</p>
-      </div>
+    <Page>
+      <PageHeader title={t("portal.myLicenses")} description={t("portal.myLicensesDesc")} />
 
       {licenses.length === 0 ? (
         <Card>
@@ -66,7 +64,7 @@ export default function PortalLicensesPage() {
           ))}
         </div>
       )}
-    </div>
+    </Page>
   )
 }
 

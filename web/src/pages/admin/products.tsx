@@ -28,6 +28,7 @@ import {
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from "@/components/ui/dialog"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
+import { FilterBar, Page, PageHeader } from "@/components/ui/page"
 import { useI18n } from "@/i18n"
 import { admin, type Product } from "@/lib/api"
 import { formatDate } from "@/lib/utils"
@@ -72,18 +73,19 @@ export default function ProductsPage() {
   const { page, setPage, pageSize, setPageSize, total, totalPages, paginatedItems } = useClientPagination(products, 10)
 
   return (
-    <div className="space-y-6">
-      <div className="flex items-center justify-between">
-        <div>
-          <h1 className="text-2xl font-bold tracking-tight">{t("products.title")}</h1>
-          <p className="text-muted-foreground">{t("products.subtitle")}</p>
-        </div>
-        <Button onClick={() => setCreating(true)}>
-          <Plus className="h-4 w-4 mr-2" /> {t("products.new")}
-        </Button>
-      </div>
+    <Page>
+      <PageHeader
+        title={t("products.title")}
+        description={t("products.subtitle")}
+        actions={
+          <Button onClick={() => setCreating(true)}>
+            <Plus />
+            {t("products.new")}
+          </Button>
+        }
+      />
 
-      <div className="flex items-center gap-4">
+      <FilterBar>
         <div className="relative flex-1 max-w-sm">
           <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
           <Input
@@ -96,7 +98,7 @@ export default function ProductsPage() {
             className="pl-9"
           />
         </div>
-      </div>
+      </FilterBar>
 
       <Card>
         <CardContent className="pt-6">
@@ -198,7 +200,7 @@ export default function ProductsPage() {
           </div>
         </AlertDialogContent>
       </AlertDialog>
-    </div>
+    </Page>
   )
 }
 
@@ -258,7 +260,7 @@ function ProductDialog({
           </div>
           <div className="space-y-2">
             <Label>{t("common.type")}</Label>
-            <div className="grid grid-cols-3 gap-3">
+            <div className="grid grid-cols-1 gap-3 sm:grid-cols-3">
               <ProductTypeCard
                 value="desktop"
                 icon={Laptop}

@@ -12,6 +12,7 @@ import {
   DataTableHeader,
   DataTableRow,
 } from "@/components/ui/data-table"
+import { Page, PageHeader } from "@/components/ui/page"
 import { useI18n } from "@/i18n"
 import { admin } from "@/lib/api"
 import { formatDate, statusColor } from "@/lib/utils"
@@ -42,28 +43,31 @@ export default function DashboardPage() {
   ]
 
   return (
-    <div className="space-y-6">
-      <div>
-        <h1 className="text-2xl font-bold tracking-tight">{t("dashboard.title")}</h1>
-        <p className="text-muted-foreground">{t("dashboard.subtitle")}</p>
-      </div>
+    <Page>
+      <PageHeader title={t("dashboard.title")} description={t("dashboard.subtitle")} />
 
       {updateData?.available && (
-        <div className="flex items-center justify-between rounded-lg border border-blue-200 bg-blue-50 px-4 py-3">
+        <div className="flex flex-col items-start gap-3 rounded-xl border border-blue-200 bg-blue-50 px-4 py-3 dark:border-blue-500/25 dark:bg-blue-500/10 sm:flex-row sm:items-center sm:justify-between">
           <div className="flex items-center gap-3">
             <ArrowUpCircle className="h-5 w-5 text-blue-600" />
             <div>
-              <p className="text-sm font-medium text-blue-900">
+              <p className="text-sm font-medium text-blue-900 dark:text-blue-200">
                 {t("dashboard.updateAvailable", { version: updateData.latest_version })}
               </p>
               {updateData.update_command && (
-                <code className="text-xs text-blue-700 font-mono mt-0.5 block">{updateData.update_command}</code>
+                <code className="mt-0.5 block font-mono text-xs text-blue-700 dark:text-blue-300">
+                  {updateData.update_command}
+                </code>
               )}
             </div>
           </div>
           <div className="flex items-center gap-2">
             <Link to="/admin/settings?tab=system">
-              <Button size="sm" variant="outline" className="text-blue-700 border-blue-300">
+              <Button
+                size="sm"
+                variant="outline"
+                className="border-blue-300 text-blue-700 dark:border-blue-500/40 dark:text-blue-300"
+              >
                 {t("dashboard.viewUpdate")}
               </Button>
             </Link>
@@ -151,6 +155,6 @@ export default function DashboardPage() {
           </CardContent>
         </Card>
       )}
-    </div>
+    </Page>
   )
 }

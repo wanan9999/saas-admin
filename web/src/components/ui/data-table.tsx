@@ -8,8 +8,12 @@ import { cn } from "@/lib/utils"
 
 const DataTable = React.forwardRef<HTMLTableElement, React.HTMLAttributes<HTMLTableElement>>(
   ({ className, ...props }, ref) => (
-    <div className="relative w-full overflow-auto rounded-md border">
-      <table ref={ref} className={cn("w-full caption-bottom text-sm border-collapse", className)} {...props} />
+    <div className="relative w-full overflow-auto rounded-xl border bg-card">
+      <table
+        ref={ref}
+        className={cn("w-full min-w-[640px] caption-bottom border-collapse text-sm", className)}
+        {...props}
+      />
     </div>
   ),
 )
@@ -17,7 +21,7 @@ DataTable.displayName = "DataTable"
 
 const DataTableHeader = React.forwardRef<HTMLTableSectionElement, React.HTMLAttributes<HTMLTableSectionElement>>(
   ({ className, ...props }, ref) => (
-    <thead ref={ref} className={cn("bg-muted/50 [&_tr]:border-b [&_tr:hover]:bg-transparent", className)} {...props} />
+    <thead ref={ref} className={cn("bg-muted/60 [&_tr]:border-b [&_tr:hover]:bg-transparent", className)} {...props} />
   ),
 )
 DataTableHeader.displayName = "DataTableHeader"
@@ -33,7 +37,7 @@ const DataTableRow = React.forwardRef<HTMLTableRowElement, React.HTMLAttributes<
   ({ className, ...props }, ref) => (
     <tr
       ref={ref}
-      className={cn("border-b transition-colors hover:bg-muted/40 data-[state=selected]:bg-muted", className)}
+      className={cn("border-b transition-colors hover:bg-muted/45 data-[state=selected]:bg-accent", className)}
       {...props}
     />
   ),
@@ -45,7 +49,7 @@ const DataTableHead = React.forwardRef<HTMLTableCellElement, React.ThHTMLAttribu
     <th
       ref={ref}
       className={cn(
-        "h-10 px-3 text-left align-middle text-xs font-semibold uppercase tracking-wider text-muted-foreground [&:has([role=checkbox])]:pr-0",
+        "h-11 whitespace-nowrap px-4 text-left align-middle text-xs font-medium text-muted-foreground [&:has([role=checkbox])]:pr-0",
         className,
       )}
       {...props}
@@ -58,7 +62,7 @@ const DataTableCell = React.forwardRef<HTMLTableCellElement, React.TdHTMLAttribu
   ({ className, ...props }, ref) => (
     <td
       ref={ref}
-      className={cn("px-3 py-2.5 align-middle text-sm [&:has([role=checkbox])]:pr-0", className)}
+      className={cn("px-4 py-3 align-middle text-sm [&:has([role=checkbox])]:pr-0", className)}
       {...props}
     />
   ),
@@ -104,7 +108,7 @@ function DataTablePagination({
   }
 
   return (
-    <div className="flex items-center justify-between gap-4 px-1 py-3">
+    <div className="flex flex-wrap items-center justify-between gap-3 py-3">
       <div className="flex items-center gap-2 text-xs text-muted-foreground">
         <span>
           {from}-{to} of {total.toLocaleString()}
@@ -131,7 +135,7 @@ function DataTablePagination({
         )}
       </div>
 
-      <div className="flex items-center gap-1">
+      <div className="ml-auto flex items-center gap-1">
         <Button variant="ghost" size="icon" className="h-7 w-7" disabled={page === 0} onClick={() => onPageChange(0)}>
           <ChevronsLeft className="h-3.5 w-3.5" />
         </Button>
@@ -158,7 +162,7 @@ function DataTablePagination({
               key={p}
               variant={p === page ? "default" : "ghost"}
               size="icon"
-              className={cn("h-7 w-7 text-xs", p === page && "pointer-events-none")}
+              className={cn("hidden h-7 w-7 text-xs sm:inline-flex", p === page && "pointer-events-none")}
               onClick={() => onPageChange(p)}
             >
               {p + 1}

@@ -13,6 +13,7 @@ import {
   DataTableRow,
 } from "@/components/ui/data-table"
 import { Input } from "@/components/ui/input"
+import { FilterBar, Page, PageHeader } from "@/components/ui/page"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
 import { useI18n } from "@/i18n"
 import { admin } from "@/lib/api"
@@ -64,13 +65,10 @@ export default function AuditPage() {
   }
 
   return (
-    <div className="space-y-6">
-      <div>
-        <h1 className="text-2xl font-bold tracking-tight">{t("audit.title")}</h1>
-        <p className="text-muted-foreground">{t("audit.subtitle")}</p>
-      </div>
+    <Page>
+      <PageHeader title={t("audit.title")} description={t("audit.subtitle")} />
 
-      <div className="flex gap-4">
+      <FilterBar>
         <Select
           value={entityFilter || "all"}
           onValueChange={(v) => {
@@ -134,7 +132,7 @@ export default function AuditPage() {
             ))}
           </SelectContent>
         </Select>
-      </div>
+      </FilterBar>
 
       <Card>
         <CardContent className="pt-6">
@@ -192,6 +190,6 @@ export default function AuditPage() {
           )}
         </CardContent>
       </Card>
-    </div>
+    </Page>
   )
 }

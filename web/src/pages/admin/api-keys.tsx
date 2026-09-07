@@ -29,6 +29,7 @@ import {
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from "@/components/ui/dialog"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
+import { FilterBar, Page, PageHeader } from "@/components/ui/page"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
 import { useI18n } from "@/i18n"
 import { admin } from "@/lib/api"
@@ -83,11 +84,8 @@ export default function APIKeysPage() {
 
   if (products.length === 0 && !isLoading) {
     return (
-      <div className="space-y-6">
-        <div>
-          <h1 className="text-2xl font-bold tracking-tight">{t("apiKeys.title")}</h1>
-          <p className="text-muted-foreground">{t("apiKeys.subtitle")}</p>
-        </div>
+      <Page>
+        <PageHeader title={t("apiKeys.title")} description={t("apiKeys.subtitle")} />
         <Card>
           <CardContent className="py-12 text-center">
             <Package className="h-12 w-12 mx-auto text-muted-foreground mb-4" />
@@ -100,23 +98,24 @@ export default function APIKeysPage() {
             </Button>
           </CardContent>
         </Card>
-      </div>
+      </Page>
     )
   }
 
   return (
-    <div className="space-y-6">
-      <div className="flex items-center justify-between">
-        <div>
-          <h1 className="text-2xl font-bold tracking-tight">{t("apiKeys.title")}</h1>
-          <p className="text-muted-foreground">{t("apiKeys.subtitle")}</p>
-        </div>
-        <Button onClick={() => setCreating(true)}>
-          <Plus className="h-4 w-4 mr-2" /> {t("apiKeys.new")}
-        </Button>
-      </div>
+    <Page>
+      <PageHeader
+        title={t("apiKeys.title")}
+        description={t("apiKeys.subtitle")}
+        actions={
+          <Button onClick={() => setCreating(true)}>
+            <Plus />
+            {t("apiKeys.new")}
+          </Button>
+        }
+      />
 
-      <div className="flex gap-4">
+      <FilterBar>
         <Select value={productFilter} onValueChange={(v) => setProductFilter(v === "all" ? "" : v)}>
           <SelectTrigger className="w-48">
             <SelectValue placeholder={t("filter.allProducts")} />
@@ -136,7 +135,7 @@ export default function APIKeysPage() {
           onChange={(e) => setSearch(e.target.value)}
           className="w-64"
         />
-      </div>
+      </FilterBar>
 
       <Card>
         <CardContent className="pt-6">
@@ -275,7 +274,7 @@ export default function APIKeysPage() {
           </div>
         </AlertDialogContent>
       </AlertDialog>
-    </div>
+    </Page>
   )
 }
 

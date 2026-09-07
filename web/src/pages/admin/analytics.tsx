@@ -42,6 +42,7 @@ import {
 } from "@/components/ui/data-table"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
+import { FilterBar, Page, PageHeader } from "@/components/ui/page"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { useI18n } from "@/i18n"
@@ -236,14 +237,11 @@ export default function AnalyticsPage() {
   ]
 
   return (
-    <div className="space-y-6">
-      <div>
-        <h1 className="text-2xl font-bold tracking-tight">{t("analytics.title")}</h1>
-        <p className="text-muted-foreground">{t("analytics.subtitle")}</p>
-      </div>
+    <Page>
+      <PageHeader title={t("analytics.title")} description={t("analytics.subtitle")} />
 
       {/* Filters */}
-      <div className="flex gap-4 flex-wrap items-end">
+      <FilterBar>
         <div className="space-y-2">
           <Label className="text-xs">{t("common.product")}</Label>
           <Select
@@ -347,7 +345,7 @@ export default function AnalyticsPage() {
             </SelectContent>
           </Select>
         </div>
-      </div>
+      </FilterBar>
 
       {isLoading ? (
         <div className="animate-pulse space-y-4">
@@ -1004,7 +1002,7 @@ export default function AnalyticsPage() {
           )}
         </>
       )}
-    </div>
+    </Page>
   )
 }
 

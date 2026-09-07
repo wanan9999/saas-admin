@@ -16,6 +16,7 @@ import {
 } from "@/components/ui/data-table"
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from "@/components/ui/dialog"
 import { Input } from "@/components/ui/input"
+import { FilterBar, Page, PageHeader } from "@/components/ui/page"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { useI18n } from "@/i18n"
 import type { UserDetail } from "@/lib/api"
@@ -39,13 +40,10 @@ export default function CustomersPage() {
   const totalPages = Math.ceil(total / limit)
 
   return (
-    <div className="space-y-6">
-      <div>
-        <h1 className="text-2xl font-bold tracking-tight">{t("customers.title")}</h1>
-        <p className="text-muted-foreground">{t("customers.subtitle", { count: total })}</p>
-      </div>
+    <Page>
+      <PageHeader title={t("customers.title")} description={t("customers.subtitle", { count: total })} />
 
-      <div className="flex items-center gap-4">
+      <FilterBar>
         <div className="relative flex-1 max-w-sm">
           <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
           <Input
@@ -58,7 +56,7 @@ export default function CustomersPage() {
             className="pl-9"
           />
         </div>
-      </div>
+      </FilterBar>
 
       <Card>
         <CardContent className="pt-6">
@@ -129,7 +127,7 @@ export default function CustomersPage() {
           if (!open) setViewingUser(null)
         }}
       />
-    </div>
+    </Page>
   )
 }
 

@@ -5,6 +5,7 @@ import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Input } from "@/components/ui/input"
+import { Page, PageHeader } from "@/components/ui/page"
 import { Separator } from "@/components/ui/separator"
 import { useAuth } from "@/hooks/use-auth"
 import { useI18n } from "@/i18n"
@@ -46,11 +47,8 @@ export default function PortalAccountPage() {
   }
 
   return (
-    <div className="space-y-6">
-      <div>
-        <h1 className="text-2xl font-bold tracking-tight">{t("portal.account")}</h1>
-        <p className="text-muted-foreground">{t("portal.accountDesc")}</p>
-      </div>
+    <Page>
+      <PageHeader title={t("portal.account")} description={t("portal.accountDesc")} />
 
       {/* Profile card */}
       <Card>
@@ -190,6 +188,6 @@ export default function PortalAccountPage() {
           )}
         </CardContent>
       </Card>
-    </div>
+    </Page>
   )
 }

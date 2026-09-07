@@ -49,7 +49,9 @@ import {
 } from "@/components/ui/dropdown-menu"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
+import { FilterBar, Page, PageHeader } from "@/components/ui/page"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
+import { Textarea } from "@/components/ui/textarea"
 import {
   admin,
   RELEASE_CHANNELS,
@@ -133,13 +135,11 @@ export default function ReleasesPage() {
   if (products.length === 0 && !isLoading) {
     const hasAnyProducts = (productsData?.products || []).length > 0
     return (
-      <div className="space-y-6">
-        <div>
-          <h1 className="text-2xl font-bold tracking-tight">Releases</h1>
-          <p className="text-muted-foreground">
-            Distribute software updates to your customers via Sparkle, Velopack, or Tauri.
-          </p>
-        </div>
+      <Page>
+        <PageHeader
+          title="Releases"
+          description="Distribute software updates to your customers via Sparkle, Velopack, or Tauri."
+        />
         <Card>
           <CardContent className="py-12 text-center">
             <Package className="h-12 w-12 mx-auto text-muted-foreground mb-4" />
@@ -164,30 +164,28 @@ export default function ReleasesPage() {
             </Button>
           </CardContent>
         </Card>
-      </div>
+      </Page>
     )
   }
 
   return (
-    <div className="space-y-6">
-      <div className="flex items-center justify-between">
-        <div>
-          <h1 className="text-2xl font-bold tracking-tight">Releases</h1>
-          <p className="text-muted-foreground">
-            Distribute software updates to your customers via Sparkle, Velopack, or Tauri.
-          </p>
-        </div>
-        <div className="flex gap-2">
-          <Button variant="outline" onClick={() => setShowSigningKeys(true)}>
-            <KeyRound className="h-4 w-4 mr-2" /> Signing keys
-          </Button>
-          <Button onClick={() => setCreating(true)}>
-            <Plus className="h-4 w-4 mr-2" /> New release
-          </Button>
-        </div>
-      </div>
+    <Page>
+      <PageHeader
+        title="Releases"
+        description="Distribute software updates to your customers via Sparkle, Velopack, or Tauri."
+        actions={
+          <>
+            <Button variant="outline" onClick={() => setShowSigningKeys(true)}>
+              <KeyRound /> Signing keys
+            </Button>
+            <Button onClick={() => setCreating(true)}>
+              <Plus /> New release
+            </Button>
+          </>
+        }
+      />
 
-      <div className="flex flex-wrap gap-3">
+      <FilterBar>
         <Select value={productFilter || "all"} onValueChange={(v) => setProductFilter(v === "all" ? "" : v)}>
           <SelectTrigger className="w-48">
             <SelectValue placeholder="All products" />
@@ -225,7 +223,7 @@ export default function ReleasesPage() {
             <SelectItem value="yanked">Yanked</SelectItem>
           </SelectContent>
         </Select>
-      </div>
+      </FilterBar>
 
       <DataTable>
         <DataTableHeader>
@@ -436,7 +434,7 @@ export default function ReleasesPage() {
           </AlertDialogContent>
         </AlertDialog>
       )}
-    </div>
+    </Page>
   )
 }
 
@@ -516,7 +514,7 @@ function CreateReleaseDialog({
               </SelectContent>
             </Select>
           </div>
-          <div className="grid grid-cols-2 gap-3">
+          <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
             <div className="space-y-2">
               <Label>Version</Label>
               <Input placeholder="1.2.3" value={version} onChange={(e) => setVersion(e.target.value)} />
@@ -543,7 +541,7 @@ function CreateReleaseDialog({
           </div>
           <div className="space-y-2">
             <Label>Release notes (optional, markdown)</Label>
-            <textarea
+            <Textarea
               rows={4}
               placeholder="What's new in this version..."
               value={releaseNotes}
@@ -799,7 +797,7 @@ function AddArtifactDialog({
           </div>
           <div className="space-y-2">
             <Label>Artifact file</Label>
-            <input ref={fileInputRef} type="file" onChange={onFileChange} disabled={busy} className="text-sm w-full" />
+            <Input ref={fileInputRef} type="file" onChange={onFileChange} disabled={busy} />
             {file && (
               <p className="text-xs text-muted-foreground">
                 {file.name} · {formatBytes(file.size)}
@@ -854,7 +852,7 @@ function YankDialog({ release, onClose }: { release: Release; onClose: () => voi
         </DialogHeader>
         <div className="space-y-2 py-2">
           <Label>Reason</Label>
-          <textarea
+          <Textarea
             rows={3}
             placeholder="Critical bug in v1.2.3 affecting Windows users; rollback recommended."
             value={reason}
@@ -1187,7 +1185,7 @@ function RotateKeyDialog({ productId, onClose }: { productId: string; onClose: (
         </DialogHeader>
         <div className="space-y-2 py-2">
           <Label>Reason (audit log)</Label>
-          <textarea
+          <Textarea
             rows={3}
             placeholder="Routine rotation; no key compromise."
             value={note}
@@ -1234,7 +1232,7 @@ function DeactivateKeyDialog({ productId, onClose }: { productId: string; onClos
         </DialogHeader>
         <div className="space-y-2 py-2">
           <Label>Reason (audit log)</Label>
-          <textarea
+          <Textarea
             rows={3}
             placeholder="Why are you deactivating?"
             value={note}

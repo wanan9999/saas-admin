@@ -24,14 +24,14 @@ export function ToastProvider({ children }: { children: ReactNode }) {
   return (
     <ToastContext.Provider value={{ addToast }}>
       {children}
-      <div className="fixed bottom-4 right-4 z-50 space-y-2 max-w-sm">
+      <div className="fixed inset-x-4 bottom-4 z-[70] space-y-2 sm:left-auto sm:right-4 sm:max-w-sm" aria-live="polite">
         {toasts.map((t) => (
           <div
             key={t.id}
-            className={`rounded-lg border px-4 py-3 text-sm shadow-lg animate-in slide-in-from-bottom-2 ${
+            className={`ui-toast rounded-xl border bg-popover px-4 py-3 text-sm text-popover-foreground shadow-xl ${
               t.type === "error"
-                ? "bg-red-50 border-red-200 text-red-800"
-                : "bg-emerald-50 border-emerald-200 text-emerald-800"
+                ? "border-red-200 bg-red-50 text-red-800 dark:border-red-500/30 dark:bg-red-950 dark:text-red-200"
+                : "border-emerald-200 bg-emerald-50 text-emerald-800 dark:border-emerald-500/30 dark:bg-emerald-950 dark:text-emerald-200"
             }`}
           >
             {t.message}

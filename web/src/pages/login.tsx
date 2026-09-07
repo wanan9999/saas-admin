@@ -106,8 +106,9 @@ export default function LoginPage() {
   if (user) return <Navigate to={user.is_admin ? "/admin" : "/portal"} replace />
 
   return (
-    <div className="flex flex-col items-center justify-center min-h-screen bg-muted/30">
-      <Card className="w-full max-w-sm">
+    <div className="relative flex min-h-screen flex-col items-center justify-center overflow-hidden bg-background p-4">
+      <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_top_left,color-mix(in_oklab,var(--primary)_14%,transparent),transparent_35%),radial-gradient(circle_at_bottom_right,color-mix(in_oklab,var(--primary)_9%,transparent),transparent_30%)]" />
+      <Card className="relative w-full max-w-sm border-border/80 shadow-2xl shadow-slate-950/5">
         <CardHeader className="text-center">
           <div className="flex justify-center mb-2">
             <img src={logo_url || "/logo.svg"} alt={site_name} className="h-12 w-12" />
@@ -218,7 +219,7 @@ export default function LoginPage() {
         href={attribution_url}
         target="_blank"
         rel="noopener noreferrer"
-        className="mt-4 text-[10px] text-muted-foreground/40 hover:text-muted-foreground transition-colors"
+        className="relative mt-4 text-[10px] text-muted-foreground/70 transition-colors hover:text-foreground"
       >
         {attribution_text}
       </a>

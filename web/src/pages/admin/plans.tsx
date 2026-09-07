@@ -29,6 +29,7 @@ import {
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from "@/components/ui/dialog"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
+import { FilterBar, Page, PageHeader } from "@/components/ui/page"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
 import { Separator } from "@/components/ui/separator"
 import { useI18n } from "@/i18n"
@@ -79,11 +80,8 @@ export default function PlansPage() {
 
   if (!isLoading && products.length === 0) {
     return (
-      <div className="space-y-6">
-        <div>
-          <h1 className="text-2xl font-bold tracking-tight">{t("plans.title")}</h1>
-          <p className="text-muted-foreground">{t("plans.subtitle")}</p>
-        </div>
+      <Page>
+        <PageHeader title={t("plans.title")} description={t("plans.subtitle")} />
         <Card>
           <CardContent className="py-12 text-center">
             <Package className="h-12 w-12 mx-auto text-muted-foreground mb-4" />
@@ -96,23 +94,24 @@ export default function PlansPage() {
             </Button>
           </CardContent>
         </Card>
-      </div>
+      </Page>
     )
   }
 
   return (
-    <div className="space-y-6">
-      <div className="flex items-center justify-between">
-        <div>
-          <h1 className="text-2xl font-bold tracking-tight">{t("plans.title")}</h1>
-          <p className="text-muted-foreground">{t("plans.subtitle")}</p>
-        </div>
-        <Button onClick={() => setCreating(true)}>
-          <Plus className="h-4 w-4 mr-2" /> {t("plans.new")}
-        </Button>
-      </div>
+    <Page>
+      <PageHeader
+        title={t("plans.title")}
+        description={t("plans.subtitle")}
+        actions={
+          <Button onClick={() => setCreating(true)}>
+            <Plus />
+            {t("plans.new")}
+          </Button>
+        }
+      />
 
-      <div className="flex gap-4">
+      <FilterBar>
         <Input
           placeholder={t("common.search")}
           value={search}
@@ -132,7 +131,7 @@ export default function PlansPage() {
             ))}
           </SelectContent>
         </Select>
-      </div>
+      </FilterBar>
 
       <Card>
         <CardContent className="pt-6">
@@ -281,7 +280,7 @@ export default function PlansPage() {
           </div>
         </AlertDialogContent>
       </AlertDialog>
-    </div>
+    </Page>
   )
 }
 
@@ -364,7 +363,7 @@ function PlanDialog({
           }}
           className="space-y-4"
         >
-          <div className="grid grid-cols-2 gap-4">
+          <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
             <div className="space-y-2 col-span-2">
               <Label>{t("common.product")}</Label>
 
@@ -657,7 +656,7 @@ function EntitlementSection({ planId, entitlements: initial }: { planId: string;
       )}
       {adding && (
         <div className="border rounded p-3 space-y-3">
-          <div className="grid grid-cols-2 gap-3">
+          <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
             <div className="space-y-2">
               <Label className="text-xs">{t("plans.feature")}</Label>
               <Input

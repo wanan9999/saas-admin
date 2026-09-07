@@ -7,15 +7,15 @@ interface BadgeProps extends React.HTMLAttributes<HTMLSpanElement> {
 
 function Badge({ className, variant = "default", ...props }: BadgeProps) {
   const variants = {
-    default: "border-transparent bg-primary text-primary-foreground shadow",
+    default: "border-transparent bg-primary/12 text-primary dark:bg-primary/18 dark:text-primary",
     secondary: "border-transparent bg-secondary text-secondary-foreground",
-    destructive: "border-transparent bg-destructive text-white shadow",
-    outline: "text-foreground",
+    destructive: "border-transparent bg-destructive/12 text-destructive dark:bg-destructive/20",
+    outline: "bg-background text-foreground",
   }
   return (
     <span
       className={cn(
-        "inline-flex items-center rounded-md border px-2.5 py-0.5 text-xs font-semibold transition-colors focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2",
+        "inline-flex items-center gap-1 rounded-md border px-2 py-0.5 text-xs font-medium transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring/25",
         variants[variant],
         className,
       )}

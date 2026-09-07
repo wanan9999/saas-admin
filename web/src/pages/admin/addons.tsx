@@ -29,6 +29,7 @@ import {
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from "@/components/ui/dialog"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
+import { FilterBar, Page, PageHeader } from "@/components/ui/page"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
 import { useI18n } from "@/i18n"
 import { admin } from "@/lib/api"
@@ -62,11 +63,8 @@ export default function AddonsPage() {
 
   if (!isLoading && products.length === 0) {
     return (
-      <div className="space-y-6">
-        <div>
-          <h1 className="text-2xl font-bold tracking-tight">{t("addons.title")}</h1>
-          <p className="text-muted-foreground">{t("addons.subtitle")}</p>
-        </div>
+      <Page>
+        <PageHeader title={t("addons.title")} description={t("addons.subtitle")} />
         <Card>
           <CardContent className="py-12 text-center">
             <Package className="h-12 w-12 mx-auto text-muted-foreground mb-4" />
@@ -79,23 +77,24 @@ export default function AddonsPage() {
             </Button>
           </CardContent>
         </Card>
-      </div>
+      </Page>
     )
   }
 
   return (
-    <div className="space-y-6">
-      <div className="flex items-center justify-between">
-        <div>
-          <h1 className="text-2xl font-bold tracking-tight">{t("addons.title")}</h1>
-          <p className="text-muted-foreground">{t("addons.subtitle")}</p>
-        </div>
-        <Button onClick={() => setCreating(true)}>
-          <Plus className="h-4 w-4 mr-2" /> {t("addons.new")}
-        </Button>
-      </div>
+    <Page>
+      <PageHeader
+        title={t("addons.title")}
+        description={t("addons.subtitle")}
+        actions={
+          <Button onClick={() => setCreating(true)}>
+            <Plus />
+            {t("addons.new")}
+          </Button>
+        }
+      />
 
-      <div className="flex gap-4">
+      <FilterBar>
         <Select value={productFilter} onValueChange={(v) => setProductFilter(v === "all" ? "" : v)}>
           <SelectTrigger className="w-48">
             <SelectValue placeholder={t("filter.allProducts")} />
@@ -115,7 +114,7 @@ export default function AddonsPage() {
           onChange={(e) => setSearch(e.target.value)}
           className="w-64"
         />
-      </div>
+      </FilterBar>
 
       <Card>
         <CardContent className="pt-6">
@@ -206,7 +205,7 @@ export default function AddonsPage() {
           </div>
         </AlertDialogContent>
       </AlertDialog>
-    </div>
+    </Page>
   )
 }
 
@@ -260,7 +259,7 @@ function AddonDialog({
           }}
           className="space-y-4"
         >
-          <div className="grid grid-cols-2 gap-4">
+          <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
             <div className="space-y-2 col-span-2">
               <Label>{t("common.product")}</Label>
               <Select value={form.product_id} onValueChange={(v) => set("product_id", v)}>

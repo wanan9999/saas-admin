@@ -16,6 +16,7 @@ import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
+import { Page, PageHeader } from "@/components/ui/page"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { useAuth } from "@/hooks/use-auth"
@@ -134,27 +135,27 @@ export default function SettingsPage() {
   }
 
   return (
-    <div className="space-y-6">
-      <div className="flex items-center justify-between">
-        <div>
-          <h1 className="text-2xl font-bold tracking-tight">{t("settings.title")}</h1>
-          <p className="text-muted-foreground">{t("settings.subtitle")}</p>
-        </div>
-        <Button onClick={() => saveMut.mutate()} disabled={saveMut.isPending}>
-          {saved ? (
-            <>
-              <Check className="h-4 w-4 mr-2" /> {t("settings.saved")}
-            </>
-          ) : saveMut.isPending ? (
-            t("common.loading")
-          ) : (
-            t("common.save")
-          )}
-        </Button>
-      </div>
+    <Page>
+      <PageHeader
+        title={t("settings.title")}
+        description={t("settings.subtitle")}
+        actions={
+          <Button onClick={() => saveMut.mutate()} disabled={saveMut.isPending}>
+            {saved ? (
+              <>
+                <Check className="h-4 w-4 mr-2" /> {t("settings.saved")}
+              </>
+            ) : saveMut.isPending ? (
+              t("common.loading")
+            ) : (
+              t("common.save")
+            )}
+          </Button>
+        }
+      />
 
       <Tabs defaultValue="general">
-        <TabsList>
+        <TabsList className="max-w-full justify-start overflow-x-auto">
           <TabsTrigger value="general">{t("settings.general")}</TabsTrigger>
           <TabsTrigger value="team">{t("team.title")}</TabsTrigger>
           <TabsTrigger value="email">{t("settings.email")}</TabsTrigger>
@@ -169,7 +170,7 @@ export default function SettingsPage() {
               <CardTitle className="text-base">{t("settings.general")}</CardTitle>
             </CardHeader>
             <CardContent className="space-y-6">
-              <div className="grid grid-cols-2 gap-6">
+              <div className="grid grid-cols-1 gap-6 md:grid-cols-2">
                 <div className="space-y-2">
                   <Label>{t("settings.siteName")}</Label>
                   <Input
@@ -327,7 +328,7 @@ export default function SettingsPage() {
               <CardTitle className="text-base">{t("settings.rateLimit")}</CardTitle>
             </CardHeader>
             <CardContent className="space-y-6">
-              <div className="grid grid-cols-2 gap-6">
+              <div className="grid grid-cols-1 gap-6 md:grid-cols-2">
                 <div className="space-y-2">
                   <Label>{t("settings.rateLimitApi")}</Label>
                   <Input
@@ -357,7 +358,7 @@ export default function SettingsPage() {
               <CardTitle className="text-base">{t("settings.webhookConfig")}</CardTitle>
             </CardHeader>
             <CardContent className="space-y-6">
-              <div className="grid grid-cols-2 gap-6">
+              <div className="grid grid-cols-1 gap-6 md:grid-cols-2">
                 <div className="space-y-2">
                   <Label>{t("settings.webhookMaxAttempts")}</Label>
                   <Input
@@ -400,7 +401,7 @@ export default function SettingsPage() {
               <CardTitle className="text-base">{t("settings.versionInfo")}</CardTitle>
             </CardHeader>
             <CardContent className="space-y-4">
-              <div className="grid grid-cols-3 gap-4 text-sm">
+              <div className="grid grid-cols-1 gap-4 text-sm sm:grid-cols-3">
                 <div>
                   <p className="text-muted-foreground">{t("settings.currentVersion")}</p>
                   <p className="font-mono font-semibold mt-1">{versionData?.version || "dev"}</p>
@@ -457,7 +458,7 @@ export default function SettingsPage() {
           </Card>
         </TabsContent>
       </Tabs>
-    </div>
+    </Page>
   )
 }
 

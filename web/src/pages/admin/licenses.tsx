@@ -29,6 +29,7 @@ import {
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from "@/components/ui/dialog"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
+import { FilterBar, Page, PageHeader } from "@/components/ui/page"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
 import { Separator } from "@/components/ui/separator"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
@@ -101,11 +102,8 @@ export default function LicensesPage() {
 
   if (!isLoading && products.length === 0) {
     return (
-      <div className="space-y-6">
-        <div>
-          <h1 className="text-2xl font-bold tracking-tight">{t("licenses.title")}</h1>
-          <p className="text-muted-foreground">Manage software licenses.</p>
-        </div>
+      <Page>
+        <PageHeader title={t("licenses.title")} description="Manage software licenses." />
         <Card>
           <CardContent className="py-12 text-center">
             <Package className="h-12 w-12 mx-auto text-muted-foreground mb-4" />
@@ -118,25 +116,24 @@ export default function LicensesPage() {
             </Button>
           </CardContent>
         </Card>
-      </div>
+      </Page>
     )
   }
 
   return (
-    <div className="space-y-6">
-      <div className="flex items-center justify-between">
-        <div>
-          <h1 className="text-2xl font-bold tracking-tight">{t("licenses.title")}</h1>
-          <p className="text-muted-foreground">
-            {total} {t("licenses.title").toLowerCase()} total
-          </p>
-        </div>
-        <Button onClick={() => setCreating(true)}>
-          <Plus className="h-4 w-4 mr-2" /> {t("licenses.issue")}
-        </Button>
-      </div>
+    <Page>
+      <PageHeader
+        title={t("licenses.title")}
+        description={`${total} ${t("licenses.title").toLowerCase()} total`}
+        actions={
+          <Button onClick={() => setCreating(true)}>
+            <Plus />
+            {t("licenses.issue")}
+          </Button>
+        }
+      />
 
-      <div className="flex items-center gap-4">
+      <FilterBar>
         <div className="relative flex-1 max-w-sm">
           <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
           <Input
@@ -187,7 +184,7 @@ export default function LicensesPage() {
             ))}
           </SelectContent>
         </Select>
-      </div>
+      </FilterBar>
 
       <Card>
         <CardContent className="pt-6">
@@ -265,7 +262,7 @@ export default function LicensesPage() {
 
       {/* Detail */}
       {viewing && <LicenseDetail id={viewing} onClose={() => setViewing(null)} />}
-    </div>
+    </Page>
   )
 }
 
@@ -403,7 +400,7 @@ function CreateLicenseDialog({
               to map their own user/workspace model to this license.
               Both optional; leave blank if not integrating with an
               external system. */}
-          <div className="grid grid-cols-2 gap-3">
+          <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
             <div className="space-y-2">
               <Label>{t("licenses.externalCustomerID")}</Label>
               <Input
@@ -533,7 +530,7 @@ function LicenseDetail({ id, onClose }: { id: string; onClose: () => void }) {
             <TabsContent value="info">
               <div className="space-y-6">
                 {/* Info */}
-                <div className="grid grid-cols-2 gap-4 text-sm">
+                <div className="grid grid-cols-1 gap-4 text-sm sm:grid-cols-2">
                   <div>
                     <p className="text-muted-foreground">{t("licenses.licenseKey")}</p>
                     <div className="flex items-center gap-2 mt-1">
@@ -646,7 +643,7 @@ function LicenseDetail({ id, onClose }: { id: string; onClose: () => void }) {
                   </div>
                 )}
                 {(lic.external_customer_id || lic.external_workspace_id) && (
-                  <div className="grid grid-cols-2 gap-4 text-sm">
+                  <div className="grid grid-cols-1 gap-4 text-sm sm:grid-cols-2">
                     {lic.external_customer_id && (
                       <div>
                         <p className="text-muted-foreground">{t("licenses.externalCustomerID")}</p>
@@ -817,7 +814,7 @@ function LicenseDetail({ id, onClose }: { id: string; onClose: () => void }) {
                     <Separator />
                     <div>
                       <h3 className="font-semibold mb-3">{t("plans.entitlements")}</h3>
-                      <div className="grid grid-cols-2 gap-2">
+                      <div className="grid grid-cols-1 gap-2 sm:grid-cols-2">
                         {lic.plan.entitlements.map((e) => (
                           <div key={e.id} className="flex justify-between bg-muted/50 rounded px-3 py-2 text-sm">
                             <span className="font-medium">{e.feature}</span>
