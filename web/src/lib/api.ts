@@ -407,7 +407,7 @@ export const admin = {
     get<{ templates: Record<string, { custom: string; default: string }> }>("/admin/email-templates"),
 
   // System
-  getVersion: () => get<{ version: string; commit: string; build_date: string }>("/version"),
+  getVersion: () => get<{ version: string; project: string; project_url: string }>("/version"),
   checkUpdate: () =>
     get<{
       available: boolean

@@ -6,11 +6,7 @@ BUN       := bun
 BIN       := bin/$(APP)
 WEB_DEPS  := web/node_modules/.saas-admin-install-stamp
 VERSION   ?= $(shell git describe --tags --always --dirty 2>/dev/null || echo "dev")
-COMMIT    ?= $(shell git rev-parse --short HEAD 2>/dev/null || echo "unknown")
-BUILD_DATE := $(shell date -u +%Y-%m-%dT%H:%M:%SZ)
-LDFLAGS   := -X github.com/wanan9999/saas-admin/internal/version.Version=$(VERSION) \
-             -X github.com/wanan9999/saas-admin/internal/version.Commit=$(COMMIT) \
-             -X github.com/wanan9999/saas-admin/internal/version.BuildDate=$(BUILD_DATE)
+LDFLAGS   := -X github.com/wanan9999/saas-admin/internal/version.Version=$(VERSION)
 
 .PHONY: help
 help: ## Show this help
@@ -84,9 +80,7 @@ db-restore: ## Restore database from BACKUP=file.sql
 .PHONY: docker-build
 docker-build: ## Build Docker image locally
 	docker build -t $(APP):$(VERSION) \
-		--build-arg VERSION=$(VERSION) \
-		--build-arg COMMIT=$(COMMIT) \
-		--build-arg BUILD_DATE=$(BUILD_DATE) .
+		--build-arg VERSION=$(VERSION) .
 
 .PHONY: docker-up
 docker-up: ## Start with Docker Compose

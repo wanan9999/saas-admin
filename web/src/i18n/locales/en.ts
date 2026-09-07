@@ -376,8 +376,6 @@ const en = {
   "settings.system": "System",
   "settings.versionInfo": "Version Information",
   "settings.currentVersion": "Current Version",
-  "settings.commitHash": "Commit",
-  "settings.buildDate": "Build Date",
   "settings.checkUpdate": "Check for Updates",
   "settings.updateAvailable": "Version {version} is available!",
   "settings.viewRelease": "View Release",

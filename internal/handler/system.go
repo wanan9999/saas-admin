@@ -44,8 +44,6 @@ func NewSystemHandler(s *store.Store) *SystemHandler {
 func (h *SystemHandler) GetVersion(c *gin.Context) {
 	response.OK(c, gin.H{
 		"version":     version.Version,
-		"commit":      version.Commit,
-		"build_date":  version.BuildDate,
 		"project":     branding.Project,
 		"project_url": branding.RepositoryURL,
 	})

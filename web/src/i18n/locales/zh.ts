@@ -364,8 +364,6 @@ const zh = {
   "settings.system": "系统",
   "settings.versionInfo": "版本信息",
   "settings.currentVersion": "当前版本",
-  "settings.commitHash": "提交哈希",
-  "settings.buildDate": "构建日期",
   "settings.checkUpdate": "检查更新",
   "settings.updateAvailable": "版本 {version} 可用！",
   "settings.viewRelease": "查看发布",

@@ -15,13 +15,8 @@ RUN go mod download
 COPY . .
 COPY --from=frontend /app/web/dist ./web/dist
 ARG VERSION=dev
-ARG COMMIT=unknown
-ARG BUILD_DATE=unknown
 RUN CGO_ENABLED=0 go build -trimpath \
-    -ldflags "-s -w \
-      -X github.com/wanan9999/saas-admin/internal/version.Version=${VERSION} \
-      -X github.com/wanan9999/saas-admin/internal/version.Commit=${COMMIT} \
-      -X github.com/wanan9999/saas-admin/internal/version.BuildDate=${BUILD_DATE}" \
+    -ldflags "-s -w -X github.com/wanan9999/saas-admin/internal/version.Version=${VERSION}" \
     -o /saas-admin ./cmd/server
 
 # ── Runtime ──

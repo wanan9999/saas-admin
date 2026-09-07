@@ -397,18 +397,10 @@ export default function SettingsPage() {
               <CardTitle className="text-base">{t("settings.versionInfo")}</CardTitle>
             </CardHeader>
             <CardContent className="space-y-4">
-              <div className="grid grid-cols-1 gap-4 text-sm sm:grid-cols-3">
+              <div className="text-sm">
                 <div>
                   <p className="text-muted-foreground">{t("settings.currentVersion")}</p>
                   <p className="font-mono font-semibold mt-1">{versionData?.version || "dev"}</p>
-                </div>
-                <div>
-                  <p className="text-muted-foreground">{t("settings.commitHash")}</p>
-                  <p className="font-mono mt-1">{versionData?.commit || "-"}</p>
-                </div>
-                <div>
-                  <p className="text-muted-foreground">{t("settings.buildDate")}</p>
-                  <p className="mt-1">{versionData?.build_date || "-"}</p>
                 </div>
               </div>
 
