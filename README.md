@@ -10,13 +10,6 @@
 
 [官网](https://keygate.app) · [文档](https://keygate.app/docs) · [社区](https://github.com/tabloy/keygate/discussions)
 
-[![License](https://img.shields.io/badge/license-AGPL%20v3-blue.svg)](LICENSE)
-[![Release](https://img.shields.io/github/v/release/tabloy/keygate?label=release&color=green)](https://github.com/tabloy/keygate/releases)
-[![Stars](https://img.shields.io/github/stars/tabloy/keygate?style=flat)](https://github.com/tabloy/keygate/stargazers)
-[![Sponsor](https://img.shields.io/badge/sponsor-❤-ff69b4)](https://keygate.app/sponsorships)
-
-**[English](README.md)** · **[简体中文](README.zh-CN.md)**
-
 <br />
 
 <img src="web/public/screenshot.png" width="800" alt="Keygate 管理后台" />
@@ -141,35 +134,4 @@ make build && ./bin/keygate
 
 <br />
 
-## 社区
 
-- **[讨论区](https://github.com/tabloy/keygate/discussions)** — 提问、分享想法
-- **[Issues](https://github.com/tabloy/keygate/issues)** — Bug 报告和功能请求
-- **[博客](https://keygate.app/blog)** — 产品更新和技术文章
-- **[赞助](https://keygate.app/sponsorships)** — 支持项目发展
-
-## 贡献
-
-欢迎所有形式的贡献 — Bug 修复、新功能、文档改进、翻译等。查看 [open issues](https://github.com/tabloy/keygate/issues) 或发起 [讨论](https://github.com/tabloy/keygate/discussions)，然后提交 PR。
-
-## 许可证
-
-[AGPL v3 License](LICENSE)（附 [Section 7(b)](https://www.gnu.org/licenses/agpl-3.0.en.html#section7) 附加条款）— Copyright © 2026 [Tabloy](https://tabloy.app)
-
-你可以在 AGPL v3 下自由 fork、修改和自托管本软件。UI 中的 **"Powered by Keygate"** 署名须保留（详见 [NOTICE](NOTICE)）。如需移除署名，可购买商业许可 — 联系 [hello@keygate.app](mailto:hello@keygate.app)。
-
-## Star 趋势
-
-<a href="https://star-history.com/#tabloy/keygate&Date">
- <picture>
-   <source media="(prefers-color-scheme: dark)" srcset="https://api.star-history.com/svg?repos=tabloy/keygate&type=Date&theme=dark" />
-   <source media="(prefers-color-scheme: light)" srcset="https://api.star-history.com/svg?repos=tabloy/keygate&type=Date" />
-   <img alt="Star History Chart" src="https://api.star-history.com/svg?repos=tabloy/keygate&type=Date" width="600" />
- </picture>
-</a>
-
----
-
-<div align="center">
-<sub>如果 Keygate 对你的业务有帮助，请给我们一个 ⭐</sub>
-</div>
