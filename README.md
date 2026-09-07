@@ -14,10 +14,6 @@
 
 <br />
 
-## 许可证与归属
-
-本项目按 AGPL v3 及 `NOTICE` 中的附加条款发布。依法保留 [Powered by Keygate](https://keygate.app) 归属标识。
-
 
 ## 为什么选择 saas-admin？
 
