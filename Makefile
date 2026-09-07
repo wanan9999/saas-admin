@@ -4,6 +4,7 @@ APP       := keygate
 GO        := go
 BUN       := bun
 BIN       := bin/$(APP)
+WEB_DEPS  := web/node_modules/.keygate-install-stamp
 VERSION   ?= $(shell git describe --tags --always --dirty 2>/dev/null || echo "dev")
 COMMIT    ?= $(shell git rev-parse --short HEAD 2>/dev/null || echo "unknown")
 BUILD_DATE := $(shell date -u +%Y-%m-%dT%H:%M:%SZ)
@@ -25,11 +26,11 @@ build-go: ## Build Go binary
 	$(GO) build -trimpath -ldflags "$(LDFLAGS)" -o $(BIN) ./cmd/server
 
 .PHONY: build-web
-build-web: web/node_modules ## Build frontend
+build-web: $(WEB_DEPS) ## Build frontend
 	cd web && $(BUN) run build
 
-web/node_modules: web/package.json
-	cd web && $(BUN) install
+$(WEB_DEPS): web/package.json web/bun.lock
+	cd web && $(BUN) install --frozen-lockfile
 	@touch $@
 
 # ─── Dev ──────────────────────────────────────────
@@ -39,21 +40,24 @@ dev: ## Run backend with hot reload (air)
 	air
 
 .PHONY: dev-web
-dev-web: web/node_modules ## Run frontend dev server
+dev-web: $(WEB_DEPS) ## Run frontend dev server
 	cd web && $(BUN) run dev
 
 # ─── Quality ──────────────────────────────────────
 
 .PHONY: fmt
-fmt: ## Format all code
-	goimports -w ./cmd/ ./internal/ ./pkg/ 2>/dev/null || true
-	gofmt -w ./cmd/ ./internal/ ./pkg/
-	cd web && $(BUN) run fmt 2>/dev/null || true
+fmt: $(WEB_DEPS) ## Format all code
+	@if command -v goimports >/dev/null 2>&1; then \
+		goimports -w ./cmd/ ./internal/ ./pkg/; \
+	else \
+		gofmt -w ./cmd/ ./internal/ ./pkg/; \
+	fi
+	cd web && $(BUN) run fmt
 
 .PHONY: lint
-lint: ## Lint all code
+lint: $(WEB_DEPS) ## Lint all code
 	$(GO) vet ./...
-	cd web && $(BUN) run lint 2>/dev/null || true
+	cd web && $(BUN) run lint
 
 .PHONY: test
 test: ## Run all tests
@@ -63,10 +67,6 @@ test: ## Run all tests
 check: lint test build ## Full CI check (lint + test + build)
 
 # ─── Database ─────────────────────────────────────
-
-.PHONY: seed
-seed: ## Seed database with demo data
-	$(GO) run ./cmd/seed
 
 .PHONY: db-backup
 db-backup: ## Backup database to backup.sql

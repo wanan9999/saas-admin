@@ -885,20 +885,9 @@ func (h *AdminHandler) DeleteAPIKey(c *gin.Context) {
 // ─── Licenses ───
 
 func (h *AdminHandler) ListLicenses(c *gin.Context) {
-	productID := c.Query("product_id")
-	// When the request comes from an API key bound to a specific
-	// product, override (or fill in) the product_id filter so the
-	// list can never leak rows from other products even when the
-	// caller forgets — or deliberately omits — the query param.
-	if v, ok := c.Get("api_key"); ok {
-		if ak, ok := v.(*model.APIKey); ok && ak != nil && ak.ProductID != "" {
-			if productID != "" && productID != ak.ProductID {
-				response.Err(c, http.StatusForbidden, "PRODUCT_SCOPE_MISMATCH",
-					"api_key is bound to a different product")
-				return
-			}
-			productID = ak.ProductID
-		}
+	productID, ok := scopedProductFilter(c, c.Query("product_id"))
+	if !ok {
+		return
 	}
 	licenses, total, err := h.Store.ListLicenses(c, store.LicenseListFilter{
 		ProductID:           productID,
@@ -1103,10 +1092,10 @@ func (h *AdminHandler) licenseKeyHint(l *model.License) string {
 // RevealLicenseKey returns one plaintext license key.
 // GET /api/v1/admin/licenses/:id/key
 //
-// Split out from the list and detail payloads so that browsing the
-// dashboard, exporting a report, or holding a licenses:write API key
-// does not spray every customer's credential across logs, proxies and
-// browser caches. Each reveal is a deliberate act and is audited.
+// Split out from list and detail payloads so routine browsing does not
+// spray customer credentials across logs, proxies and browser caches.
+// Each reveal is a deliberate act and is audited; bulk export is a
+// separate, explicitly audited operation with the same product boundary.
 func (h *AdminHandler) RevealLicenseKey(c *gin.Context) {
 	id := c.Param("id")
 	if !h.checkLicenseScope(c, id) {
@@ -1441,6 +1430,27 @@ func requireKeyProductScope(c *gin.Context, resourceProductID string) bool {
 	response.Err(c, http.StatusForbidden, "PRODUCT_SCOPE_MISMATCH",
 		"api_key is bound to a different product")
 	return false
+}
+
+// scopedProductFilter applies an API key's product boundary to collection
+// endpoints. A product-bound key can omit its product_id for convenience,
+// but it cannot widen or replace that scope through a query parameter.
+// Admin sessions and system-wide keys retain the requested filter.
+func scopedProductFilter(c *gin.Context, requestedProductID string) (string, bool) {
+	v, ok := c.Get("api_key")
+	if !ok {
+		return requestedProductID, true
+	}
+	ak, ok := v.(*model.APIKey)
+	if !ok || ak == nil || ak.ProductID == "" {
+		return requestedProductID, true
+	}
+	if requestedProductID != "" && requestedProductID != ak.ProductID {
+		response.Err(c, http.StatusForbidden, "PRODUCT_SCOPE_MISMATCH",
+			"api_key is bound to a different product")
+		return "", false
+	}
+	return ak.ProductID, true
 }
 
 // ─── Usage (admin) ───
@@ -2367,7 +2377,12 @@ func (h *AdminHandler) ExportLicenses(c *gin.Context) {
 		return
 	}
 
-	licenses, err := h.Store.ExportLicenses(c, c.Query("product_id"), c.Query("status"))
+	productID, ok := scopedProductFilter(c, c.Query("product_id"))
+	if !ok {
+		return
+	}
+
+	licenses, err := h.Store.ExportLicenses(c, productID, c.Query("status"))
 	if err != nil {
 		response.Internal(c)
 		return
@@ -2382,9 +2397,10 @@ func (h *AdminHandler) ExportLicenses(c *gin.Context) {
 		ActorType: "admin", ActorID: adminID(c), IPAddress: c.ClientIP(),
 		Changes: map[string]any{
 			"format": format, "count": len(licenses),
-			"product_id": c.Query("product_id"), "status": c.Query("status"),
+			"product_id": productID, "status": c.Query("status"),
 		},
 	})
+	c.Header("Cache-Control", "no-store")
 
 	dateStr := time.Now().Format("2006-01-02")
 
