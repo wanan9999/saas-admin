@@ -223,7 +223,7 @@ function CustomerDetailDialog({
             {/* Licenses Tab */}
             <TabsContent value="licenses">
               {(detail.licenses || []).length === 0 ? (
-                <p className="py-10 text-center text-sm text-muted-foreground">No licenses found.</p>
+                <p className="py-10 text-center text-sm text-muted-foreground">{t("customers.noLicenses")}</p>
               ) : (
                 <DataTable>
                   <DataTableHeader>
@@ -268,7 +268,7 @@ function CustomerDetailDialog({
             {/* Subscriptions Tab */}
             <TabsContent value="subscriptions">
               {(detail.subscriptions || []).length === 0 ? (
-                <p className="py-10 text-center text-sm text-muted-foreground">No subscriptions found.</p>
+                <p className="py-10 text-center text-sm text-muted-foreground">{t("customers.noSubscriptions")}</p>
               ) : (
                 <DataTable>
                   <DataTableHeader>
@@ -321,7 +321,7 @@ function CustomerDetailDialog({
             {/* Activity Tab */}
             <TabsContent value="activity">
               {(detail.recent_audit_logs || []).length === 0 ? (
-                <p className="py-10 text-center text-sm text-muted-foreground">No recent activity.</p>
+                <p className="py-10 text-center text-sm text-muted-foreground">{t("customers.noActivity")}</p>
               ) : (
                 <div className="space-y-2">
                   {detail.recent_audit_logs.map((a) => (

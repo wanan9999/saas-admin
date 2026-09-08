@@ -172,7 +172,7 @@ export default function WebhooksPage() {
 
       <FilterBar>
         <Select value={productFilter} onValueChange={(v) => setProductFilter(v === "all" ? "" : v)}>
-          <SelectTrigger className="w-48">
+          <SelectTrigger className="w-full sm:w-48">
             <SelectValue placeholder={t("filter.allProducts")} />
           </SelectTrigger>
           <SelectContent>
@@ -457,7 +457,7 @@ function SecretDialog({ secret, onClose }: { secret: string; onClose: () => void
             </Button>
           </div>
           <div className="flex justify-end">
-            <Button onClick={onClose}>Done</Button>
+            <Button onClick={onClose}>{t("common.done")}</Button>
           </div>
         </div>
       </DialogContent>
@@ -609,7 +609,7 @@ function DeliveryLogDialog({ webhookId, onClose }: { webhookId: string; onClose:
                             </div>
                             {d.payload && (
                               <div>
-                                <p className="text-xs font-medium text-muted-foreground mb-1">Payload</p>
+                                <p className="mb-1 text-xs font-medium text-muted-foreground">{t("common.payload")}</p>
                                 <pre className="text-xs bg-muted rounded p-2 overflow-auto max-h-40">
                                   {JSON.stringify(d.payload, null, 2)}
                                 </pre>
@@ -617,7 +617,9 @@ function DeliveryLogDialog({ webhookId, onClose }: { webhookId: string; onClose:
                             )}
                             {d.response_body && (
                               <div>
-                                <p className="text-xs font-medium text-muted-foreground mb-1">Response Body</p>
+                                <p className="mb-1 text-xs font-medium text-muted-foreground">
+                                  {t("common.responseBody")}
+                                </p>
                                 <pre className="text-xs bg-muted rounded p-2 overflow-auto max-h-40">
                                   {d.response_body}
                                 </pre>

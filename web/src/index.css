@@ -132,6 +132,16 @@ button, a, [role="button"] { -webkit-tap-highlight-color: transparent; }
 .ui-card[data-variant="workspace"] .ui-data-table { border-radius: 0.875rem; }
 .ui-tabs-list { scrollbar-width: none; }
 .ui-tabs-list::-webkit-scrollbar { display: none; }
+.ui-scrollbar { scrollbar-width: thin; scrollbar-color: color-mix(in oklab, var(--foreground) 14%, transparent) transparent; }
+.ui-scrollbar::-webkit-scrollbar { width: 8px; }
+.ui-scrollbar::-webkit-scrollbar-track { background: transparent; }
+.ui-scrollbar::-webkit-scrollbar-thumb {
+  border: 2px solid transparent;
+  border-radius: 999px;
+  background: color-mix(in oklab, var(--foreground) 14%, transparent);
+  background-clip: padding-box;
+}
+.ui-scrollbar:hover::-webkit-scrollbar-thumb { background-color: color-mix(in oklab, var(--foreground) 24%, transparent); }
 
 @media (prefers-reduced-motion: reduce) {
   *, *::before, *::after {

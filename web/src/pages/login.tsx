@@ -5,6 +5,7 @@ import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
+import { LoadingScreen } from "@/components/ui/loading-screen"
 import { Separator } from "@/components/ui/separator"
 import { useAuth } from "@/hooks/use-auth"
 import { useSiteConfig } from "@/hooks/use-site-config"
@@ -102,7 +103,7 @@ export default function LoginPage() {
     }
   }
 
-  if (loading) return null
+  if (loading) return <LoadingScreen />
   if (user) return <Navigate to={user.is_admin ? "/admin" : "/portal"} replace />
 
   return (

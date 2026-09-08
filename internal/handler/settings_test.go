@@ -5,7 +5,7 @@ import (
 	"testing"
 )
 
-// The three settings maps encode a policy, and the failure mode when
+// The settings maps encode a policy, and the failure mode when
 // they disagree is quiet: a key that is writable but hidden from
 // GetSettings gives the dashboard a control it can save but never read
 // back, and a server-owned key that slips into settingsWritable lets an
@@ -24,6 +24,11 @@ func TestSettingsMapsAreConsistent(t *testing.T) {
 			t.Errorf("%q is write-only but not writable — nothing could ever set it", key)
 		}
 	}
+	for key := range settingsReadable {
+		if !settingsWritable[key] {
+			t.Errorf("%q is readable but not writable", key)
+		}
+	}
 }
 
 // Regression guard for the save loop that broke once Stripe was
@@ -38,10 +43,7 @@ func TestGetSettingsOutputIsWritableBack(t *testing.T) {
 	}
 
 	for key, val := range stored {
-		if settingsServerOwned[key] || settingsSecret[key] {
-			continue
-		}
-		if !settingsWritable[key] {
+		if settingsReadable[key] && !settingsWritable[key] {
 			t.Errorf("GetSettings would return %q=%q but UpdateSettings rejects it", key, val)
 		}
 	}
@@ -50,6 +52,20 @@ func TestGetSettingsOutputIsWritableBack(t *testing.T) {
 		if !settingsSecret[key] && !settingsServerOwned[key] {
 			t.Errorf("%q must never be returned by GetSettings", key)
 		}
+	}
+}
+
+func TestDeadRuntimeSettingsAreNotWritable(t *testing.T) {
+	for _, key := range []string{"timezone", "rate_limit_api", "rate_limit_admin", "webhook_max_attempts", "webhook_timeout", "quota_warning_threshold"} {
+		if settingsWritable[key] || settingsReadable[key] {
+			t.Errorf("%q is configured from the runtime environment and must not appear as a database setting", key)
+		}
+	}
+	if settingsWritable["setup_complete"] || !settingsServerOwned["setup_complete"] {
+		t.Error("setup_complete must remain internal server state")
+	}
+	if !settingsWritable["email_template_admin_invite"] {
+		t.Error("the admin invite template shown by the dashboard must be writable")
 	}
 }
 

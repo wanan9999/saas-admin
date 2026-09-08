@@ -5,6 +5,7 @@ import { BrowserRouter, Navigate, Route, Routes } from "react-router-dom"
 import { ErrorBoundary } from "@/components/error-boundary"
 import { AdminLayout, PortalLayout } from "@/components/layout"
 import { showToast, ToastBridge, ToastProvider } from "@/components/toast"
+import { LoadingScreen } from "@/components/ui/loading-screen"
 import { AuthProvider } from "@/hooks/use-auth"
 import { SiteConfigProvider } from "@/hooks/use-site-config"
 import { ThemeProvider } from "@/hooks/use-theme"
@@ -47,11 +48,11 @@ createRoot(document.getElementById("root")!).render(
         <BrowserRouter>
           <ToastProvider>
             <ToastBridge />
-            <I18nProvider>
-              <SiteConfigProvider>
+            <SiteConfigProvider>
+              <I18nProvider>
                 <AuthProvider>
                   <ErrorBoundary>
-                    <Suspense fallback={<RouteFallback />}>
+                    <Suspense fallback={<LoadingScreen />}>
                       <Routes>
                         <Route path="/login" element={<LoginPage />} />
                         <Route path="/checkout/success" element={<CheckoutSuccessPage />} />
@@ -84,19 +85,11 @@ createRoot(document.getElementById("root")!).render(
                     </Suspense>
                   </ErrorBoundary>
                 </AuthProvider>
-              </SiteConfigProvider>
-            </I18nProvider>
+              </I18nProvider>
+            </SiteConfigProvider>
           </ToastProvider>
         </BrowserRouter>
       </ThemeProvider>
     </QueryClientProvider>
   </StrictMode>,
 )
-
-function RouteFallback() {
-  return (
-    <div className="flex min-h-64 items-center justify-center" role="status" aria-label="Loading page">
-      <div className="size-7 animate-spin rounded-full border-[3px] border-primary/20 border-t-primary" />
-    </div>
-  )
-}

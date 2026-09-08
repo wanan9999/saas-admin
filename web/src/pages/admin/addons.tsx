@@ -96,7 +96,7 @@ export default function AddonsPage() {
 
       <FilterBar>
         <Select value={productFilter} onValueChange={(v) => setProductFilter(v === "all" ? "" : v)}>
-          <SelectTrigger className="w-48">
+          <SelectTrigger className="w-full sm:w-48">
             <SelectValue placeholder={t("filter.allProducts")} />
           </SelectTrigger>
           <SelectContent>

@@ -117,7 +117,7 @@ export default function APIKeysPage() {
 
       <FilterBar>
         <Select value={productFilter} onValueChange={(v) => setProductFilter(v === "all" ? "" : v)}>
-          <SelectTrigger className="w-48">
+          <SelectTrigger className="w-full sm:w-48">
             <SelectValue placeholder={t("filter.allProducts")} />
           </SelectTrigger>
           <SelectContent>
@@ -337,12 +337,10 @@ function CreateAPIKeyDialog({
               setError(t("apiKeys.atLeastOneScope"))
               return
             }
-            // product_id is informational/scoping for now — the
-            // server only treats it as a free-text foreign key.
-            // Leave it unset for system-wide keys (the common case
-            // for admin / *:write scopes).
+            // Admin keys are system-wide by default. Narrower keys
+            // submit the product selected below when one is chosen.
             onSubmit({
-              product_id: productId || undefined,
+              product_id: scopes.includes("admin") ? undefined : productId || undefined,
               name: name.trim(),
               scopes,
             })
@@ -402,7 +400,7 @@ function CreateAPIKeyDialog({
             <Input
               value={name}
               onChange={(e) => setName(e.target.value)}
-              placeholder="e.g. CI provisioning, Acme prod backend"
+              placeholder={t("apiKeys.namePlaceholder")}
               required
             />
           </div>
@@ -451,7 +449,7 @@ function NewKeyDialog({ keyValue, onClose }: { keyValue: string; onClose: () => 
             </Button>
           </div>
           <div className="flex justify-end">
-            <Button onClick={onClose}>Done</Button>
+            <Button onClick={onClose}>{t("common.done")}</Button>
           </div>
         </div>
       </DialogContent>

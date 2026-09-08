@@ -33,6 +33,7 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu"
+import { LoadingScreen } from "@/components/ui/loading-screen"
 import { useAuth } from "@/hooks/use-auth"
 import { useSiteConfig } from "@/hooks/use-site-config"
 import { useTheme } from "@/hooks/use-theme"
@@ -188,7 +189,7 @@ export function AdminLayout() {
           <img src={logo_url || "/logo.svg"} alt="" className="size-8 shrink-0 rounded-lg" />
           <div className={cn("min-w-0", collapsed && "lg:hidden")}>
             <div className="truncate text-sm font-semibold tracking-tight text-sidebar-foreground">{site_name}</div>
-            <div className="text-[11px] font-medium text-muted-foreground">Admin workspace</div>
+            <div className="text-[11px] font-medium text-muted-foreground">{t("nav.adminWorkspace")}</div>
           </div>
         </Link>
         <Button
@@ -202,7 +203,7 @@ export function AdminLayout() {
         </Button>
       </div>
 
-      <nav className="flex-1 space-y-1 overflow-y-auto p-2.5">
+      <nav className="ui-scrollbar flex-1 space-y-1 overflow-y-auto p-2.5">
         {adminNav.map((entry, index) => {
           if ("to" in entry) return navItem(entry)
           return (
@@ -352,7 +353,7 @@ export function PortalLayout() {
             <ThemeToggle />
             {user.is_admin && (
               <Button variant="outline" size="sm" asChild className="hidden sm:inline-flex">
-                <Link to="/admin">Admin</Link>
+                <Link to="/admin">{t("nav.admin")}</Link>
               </Button>
             )}
             <DropdownMenu>
@@ -371,7 +372,7 @@ export function PortalLayout() {
                     <DropdownMenuItem asChild>
                       <Link to="/admin">
                         <Settings />
-                        Admin
+                        {t("nav.admin")}
                       </Link>
                     </DropdownMenuItem>
                   </>
@@ -422,14 +423,6 @@ export function PortalLayout() {
           {attribution_text}
         </a>
       </footer>
-    </div>
-  )
-}
-
-function LoadingScreen() {
-  return (
-    <div className="flex min-h-screen items-center justify-center bg-background" role="status" aria-label="Loading">
-      <div className="size-8 animate-spin rounded-full border-[3px] border-primary/20 border-t-primary" />
     </div>
   )
 }

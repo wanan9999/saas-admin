@@ -119,7 +119,7 @@ export default function PlansPage() {
           className="w-full sm:w-64"
         />
         <Select value={productFilter} onValueChange={setProductFilter}>
-          <SelectTrigger className="w-48">
+          <SelectTrigger className="w-full sm:w-48">
             <SelectValue placeholder={t("plans.allProducts")} />
           </SelectTrigger>
           <SelectContent>

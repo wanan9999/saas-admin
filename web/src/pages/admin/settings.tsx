@@ -20,40 +20,11 @@ import { Page, PageHeader } from "@/components/ui/page"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { useAuth } from "@/hooks/use-auth"
-import { applyBrandColor } from "@/hooks/use-site-config"
+import { useSiteConfig } from "@/hooks/use-site-config"
 import { useI18n } from "@/i18n"
 import type { User } from "@/lib/api"
 import { admin } from "@/lib/api"
 import EmailTemplatesManager from "@/pages/admin/email-templates"
-
-const TIMEZONES = [
-  { value: "UTC", label: "UTC +0:00", city: "UTC" },
-  { value: "Pacific/Midway", label: "UTC -11:00", city: "Midway" },
-  { value: "Pacific/Honolulu", label: "UTC -10:00", city: "Honolulu" },
-  { value: "America/Anchorage", label: "UTC -9:00", city: "Anchorage" },
-  { value: "America/Los_Angeles", label: "UTC -8:00", city: "Los Angeles" },
-  { value: "America/Denver", label: "UTC -7:00", city: "Denver" },
-  { value: "America/Chicago", label: "UTC -6:00", city: "Chicago" },
-  { value: "America/New_York", label: "UTC -5:00", city: "New York" },
-  { value: "America/Caracas", label: "UTC -4:00", city: "Caracas" },
-  { value: "America/Sao_Paulo", label: "UTC -3:00", city: "Sao Paulo" },
-  { value: "Atlantic/South_Georgia", label: "UTC -2:00", city: "South Georgia" },
-  { value: "Atlantic/Azores", label: "UTC -1:00", city: "Azores" },
-  { value: "Europe/London", label: "UTC +0:00", city: "London" },
-  { value: "Europe/Paris", label: "UTC +1:00", city: "Paris / Berlin" },
-  { value: "Europe/Helsinki", label: "UTC +2:00", city: "Helsinki / Cairo" },
-  { value: "Europe/Moscow", label: "UTC +3:00", city: "Moscow" },
-  { value: "Asia/Dubai", label: "UTC +4:00", city: "Dubai" },
-  { value: "Asia/Karachi", label: "UTC +5:00", city: "Karachi" },
-  { value: "Asia/Kolkata", label: "UTC +5:30", city: "Kolkata / Mumbai" },
-  { value: "Asia/Dhaka", label: "UTC +6:00", city: "Dhaka" },
-  { value: "Asia/Bangkok", label: "UTC +7:00", city: "Bangkok" },
-  { value: "Asia/Shanghai", label: "UTC +8:00", city: "Shanghai / Singapore" },
-  { value: "Asia/Tokyo", label: "UTC +9:00", city: "Tokyo / Seoul" },
-  { value: "Australia/Sydney", label: "UTC +10:00", city: "Sydney" },
-  { value: "Pacific/Noumea", label: "UTC +11:00", city: "Noumea" },
-  { value: "Pacific/Auckland", label: "UTC +12:00", city: "Auckland" },
-]
 
 // The keys this form owns. Save posts only these: the settings table
 // also holds rows the server writes for itself (Stripe webhook
@@ -64,23 +35,13 @@ const TIMEZONES = [
 // `as const` is load-bearing — set() only accepts a key from this list,
 // so adding a field to the form without adding it here is a compile
 // error rather than a control that silently never saves.
-const FORM_KEYS = [
-  "site_name",
-  "timezone",
-  "signup_mode",
-  "brand_color",
-  "logo_url",
-  "rate_limit_api",
-  "rate_limit_admin",
-  "webhook_max_attempts",
-  "webhook_timeout",
-  "quota_warning_threshold",
-] as const
+const FORM_KEYS = ["site_name", "language", "signup_mode", "brand_color", "logo_url"] as const
 
 type FormKey = (typeof FORM_KEYS)[number]
 
 export default function SettingsPage() {
   const { t, locale, setLocale } = useI18n()
+  const { refresh: refreshSiteConfig } = useSiteConfig()
   const qc = useQueryClient()
   const { data, isLoading } = useQuery({
     queryKey: ["admin", "settings"],
@@ -99,9 +60,9 @@ export default function SettingsPage() {
   const saveMut = useMutation({
     mutationFn: () =>
       admin.updateSettings(Object.fromEntries(FORM_KEYS.filter((k) => k in form).map((k) => [k, form[k]]))),
-    onSuccess: () => {
+    onSuccess: async () => {
       qc.invalidateQueries({ queryKey: ["admin", "settings"] })
-      applyBrandColor(form.brand_color || "")
+      await refreshSiteConfig()
       setSaved(true)
       setTimeout(() => setSaved(false), 3000)
     },
@@ -179,25 +140,14 @@ export default function SettingsPage() {
                   <p className="text-xs text-muted-foreground">{t("settings.siteNameDesc")}</p>
                 </div>
                 <div className="space-y-2">
-                  <Label>{t("settings.timezone")}</Label>
-                  <Select value={form.timezone || "UTC"} onValueChange={(v) => set("timezone", v)}>
-                    <SelectTrigger>
-                      <SelectValue />
-                    </SelectTrigger>
-                    <SelectContent>
-                      {TIMEZONES.map((tz) => (
-                        <SelectItem key={tz.value} value={tz.value}>
-                          <span className="font-mono text-xs">{tz.label}</span>
-                          <span className="ml-2 text-muted-foreground">{tz.city}</span>
-                        </SelectItem>
-                      ))}
-                    </SelectContent>
-                  </Select>
-                  <p className="text-xs text-muted-foreground">{t("settings.timezoneDesc")}</p>
-                </div>
-                <div className="space-y-2">
                   <Label>{t("settings.language")}</Label>
-                  <Select value={locale} onValueChange={(v) => setLocale(v as "en" | "zh")}>
+                  <Select
+                    value={form.language || locale}
+                    onValueChange={(v) => {
+                      set("language", v)
+                      setLocale(v as "en" | "zh")
+                    }}
+                  >
                     <SelectTrigger>
                       <SelectValue />
                     </SelectTrigger>
@@ -319,75 +269,6 @@ export default function SettingsPage() {
                 </SelectContent>
               </Select>
               <p className="text-xs text-muted-foreground">{t("settings.signupModeDesc")}</p>
-            </CardContent>
-          </Card>
-          <Card>
-            <CardHeader>
-              <CardTitle className="text-base">{t("settings.rateLimit")}</CardTitle>
-            </CardHeader>
-            <CardContent className="space-y-6">
-              <div className="grid grid-cols-1 gap-6 md:grid-cols-2">
-                <div className="space-y-2">
-                  <Label>{t("settings.rateLimitApi")}</Label>
-                  <Input
-                    type="number"
-                    value={form.rate_limit_api || ""}
-                    onChange={(e) => set("rate_limit_api", e.target.value)}
-                    placeholder="60"
-                  />
-                  <p className="text-xs text-muted-foreground">{t("settings.rateLimitApiDesc")}</p>
-                </div>
-                <div className="space-y-2">
-                  <Label>{t("settings.rateLimitAdmin")}</Label>
-                  <Input
-                    type="number"
-                    value={form.rate_limit_admin || ""}
-                    onChange={(e) => set("rate_limit_admin", e.target.value)}
-                    placeholder="120"
-                  />
-                  <p className="text-xs text-muted-foreground">{t("settings.rateLimitAdminDesc")}</p>
-                </div>
-              </div>
-            </CardContent>
-          </Card>
-
-          <Card>
-            <CardHeader>
-              <CardTitle className="text-base">{t("settings.webhookConfig")}</CardTitle>
-            </CardHeader>
-            <CardContent className="space-y-6">
-              <div className="grid grid-cols-1 gap-6 md:grid-cols-2">
-                <div className="space-y-2">
-                  <Label>{t("settings.webhookMaxAttempts")}</Label>
-                  <Input
-                    type="number"
-                    value={form.webhook_max_attempts || ""}
-                    onChange={(e) => set("webhook_max_attempts", e.target.value)}
-                    placeholder="5"
-                  />
-                </div>
-                <div className="space-y-2">
-                  <Label>{t("settings.webhookTimeout")}</Label>
-                  <Input
-                    value={form.webhook_timeout || ""}
-                    onChange={(e) => set("webhook_timeout", e.target.value)}
-                    placeholder="10s"
-                  />
-                </div>
-                <div className="space-y-2">
-                  <Label>{t("settings.quotaThreshold")}</Label>
-                  <Input
-                    type="number"
-                    step="0.1"
-                    min="0"
-                    max="1"
-                    value={form.quota_warning_threshold || ""}
-                    onChange={(e) => set("quota_warning_threshold", e.target.value)}
-                    placeholder="0.8"
-                  />
-                  <p className="text-xs text-muted-foreground">{t("settings.quotaThresholdDesc")}</p>
-                </div>
-              </div>
             </CardContent>
           </Card>
         </TabsContent>
@@ -548,7 +429,7 @@ function TeamManagement() {
 
           {/* Invite form (owner only) */}
           {isOwner ? (
-            <div className="flex items-end gap-3 pt-4 border-t">
+            <div className="flex flex-col gap-3 border-t pt-4 sm:flex-row sm:items-end">
               <div className="flex-1 space-y-2">
                 <Label className="text-xs">{t("team.email")}</Label>
                 <Input
@@ -558,15 +439,15 @@ function TeamManagement() {
                   placeholder="colleague@company.com"
                 />
               </div>
-              <div className="w-32 space-y-2">
+              <div className="w-full space-y-2 sm:w-32">
                 <Label className="text-xs">{t("team.role")}</Label>
                 <Select value={role} onValueChange={setRole}>
                   <SelectTrigger>
                     <SelectValue />
                   </SelectTrigger>
                   <SelectContent>
-                    <SelectItem value="admin">Admin</SelectItem>
-                    <SelectItem value="owner">Owner</SelectItem>
+                    <SelectItem value="admin">{t("common.admin")}</SelectItem>
+                    <SelectItem value="owner">{t("common.owner")}</SelectItem>
                   </SelectContent>
                 </Select>
               </div>

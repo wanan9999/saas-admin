@@ -251,7 +251,7 @@ export default function AnalyticsPage() {
               setPlanFilter("")
             }}
           >
-            <SelectTrigger className="w-48">
+            <SelectTrigger className="w-full sm:w-48">
               <SelectValue placeholder={t("filter.allProducts")} />
             </SelectTrigger>
             <SelectContent>
@@ -266,16 +266,16 @@ export default function AnalyticsPage() {
         </div>
         <div className="space-y-2">
           <Label className="text-xs">{t("analytics.start")}</Label>
-          <Input type="date" value={from} onChange={(e) => setFrom(e.target.value)} className="w-40" />
+          <Input type="date" value={from} onChange={(e) => setFrom(e.target.value)} className="w-full sm:w-40" />
         </div>
         <div className="space-y-2">
           <Label className="text-xs">{t("analytics.end")}</Label>
-          <Input type="date" value={to} onChange={(e) => setTo(e.target.value)} className="w-40" />
+          <Input type="date" value={to} onChange={(e) => setTo(e.target.value)} className="w-full sm:w-40" />
         </div>
         <div className="space-y-2">
           <Label className="text-xs">{t("analytics.granularity")}</Label>
           <Select value={granularity} onValueChange={setGranularity}>
-            <SelectTrigger className="w-36">
+            <SelectTrigger className="w-full sm:w-36">
               <SelectValue />
             </SelectTrigger>
             <SelectContent>
@@ -316,7 +316,7 @@ export default function AnalyticsPage() {
               if (v !== "all") setPlanFilter("")
             }}
           >
-            <SelectTrigger className="w-40">
+            <SelectTrigger className="w-full sm:w-40">
               <SelectValue placeholder={t("filter.allTypes")} />
             </SelectTrigger>
             <SelectContent>
@@ -330,7 +330,7 @@ export default function AnalyticsPage() {
         <div className="space-y-2">
           <Label className="text-xs">{t("common.status")}</Label>
           <Select value={statusFilter} onValueChange={(v) => setStatusFilter(v === "all" ? "" : v)}>
-            <SelectTrigger className="w-40">
+            <SelectTrigger className="w-full sm:w-40">
               <SelectValue placeholder={t("filter.allStatuses")} />
             </SelectTrigger>
             <SelectContent>
@@ -905,7 +905,7 @@ export default function AnalyticsPage() {
                         <div className="space-y-2">
                           {insights.recent_activity.map((a) => (
                             <div key={a.id} className="flex items-center gap-3 py-2 border-b last:border-0 text-sm">
-                              <span className="text-xs text-muted-foreground w-36 shrink-0">
+                              <span className="w-full text-xs text-muted-foreground sm:w-36 sm:shrink-0">
                                 {formatDate(a.created_at)}
                               </span>
                               <Badge variant="outline" className="shrink-0">
@@ -1057,15 +1057,15 @@ function BreakdownCard({ title, items }: { title: string; items: { key: string; 
               {items.map((item, i) => {
                 const pct = total > 0 ? ((item.count / total) * 100).toFixed(1) : "0.0"
                 return (
-                  <div key={item.key} className="flex items-center justify-between text-xs">
-                    <span className="flex items-center gap-2">
+                  <div key={item.key} className="flex items-center justify-between gap-3 text-xs">
+                    <span className="flex min-w-0 items-center gap-2">
                       <span
                         className="inline-block w-2.5 h-2.5 rounded-full shrink-0"
                         style={{ backgroundColor: BREAKDOWN_COLORS[i % BREAKDOWN_COLORS.length] }}
                       />
-                      <span className="font-medium">{item.label}</span>
+                      <span className="truncate font-medium">{item.label}</span>
                     </span>
-                    <span className="text-muted-foreground">
+                    <span className="shrink-0 text-muted-foreground">
                       {item.count.toLocaleString()} ({pct}%)
                     </span>
                   </div>

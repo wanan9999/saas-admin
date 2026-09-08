@@ -1929,12 +1929,8 @@ func (h *AdminHandler) ChangeLicensePlan(c *gin.Context) {
 // settingsWritable lists the keys the dashboard may write. Anything
 // else is rejected so a typo can't quietly create a dead row.
 var settingsWritable = map[string]bool{
-	"site_name": true, "timezone": true, "language": true, "brand_color": true, "logo_url": true,
-	"signup_mode":    true,
-	"rate_limit_api": true, "rate_limit_admin": true,
-	"webhook_max_attempts": true, "webhook_timeout": true,
-	"quota_warning_threshold":          true,
-	"setup_complete":                   true,
+	"site_name": true, "language": true, "brand_color": true, "logo_url": true,
+	"signup_mode":                      true,
 	"email_template_license_created":   true,
 	"email_template_license_expiring":  true,
 	"email_template_license_expired":   true,
@@ -1942,6 +1938,7 @@ var settingsWritable = map[string]bool{
 	"email_template_license_suspended": true,
 	"email_template_quota_warning":     true,
 	"email_template_seat_invite":       true,
+	"email_template_admin_invite":      true,
 	"email_template_payment_failed":    true,
 }
 
@@ -1964,6 +1961,14 @@ var settingsSecret = map[string]bool{}
 // saved while leaving the endpoint open to strangers.
 var settingsEnum = map[string][]string{
 	"signup_mode": {"open", "licensed_only"},
+	"language":    {"en", "zh"},
+}
+
+// settingsReadable is the small set returned by the general settings
+// endpoint. Email templates have their own endpoint and internal state
+// must not leak into a form payload merely because it shares the table.
+var settingsReadable = map[string]bool{
+	"site_name": true, "language": true, "brand_color": true, "logo_url": true, "signup_mode": true,
 }
 
 // settingsServerOwned lists keys the server writes for itself — the
@@ -1975,6 +1980,7 @@ var settingsEnum = map[string][]string{
 // back, so once Stripe was configured every save failed with
 // "unknown setting: stripe_webhook_secret".
 var settingsServerOwned = map[string]bool{
+	"setup_complete":                       true,
 	"stripe_webhook_secret":                true,
 	"stripe_webhook_endpoint_id":           true,
 	"stripe_webhook_secret_previous":       true,
@@ -2003,7 +2009,7 @@ func (h *AdminHandler) GetSettings(c *gin.Context) {
 			continue
 		case settingsSecret[k]:
 			secretsSet[k] = v != ""
-		default:
+		case settingsReadable[k]:
 			out[k] = v
 		}
 	}
@@ -2035,6 +2041,16 @@ func (h *AdminHandler) UpdateSettings(c *gin.Context) {
 		if allowed, ok := settingsEnum[key]; ok && !slices.Contains(allowed, val) {
 			response.BadRequest(c, "invalid value for "+key+": "+val)
 			return
+		}
+		if key == "brand_color" && val != "" {
+			if len(val) != 7 || val[0] != '#' {
+				response.BadRequest(c, "brand_color must be a 6-digit hex color")
+				return
+			}
+			if _, err := strconv.ParseUint(val[1:], 16, 24); err != nil {
+				response.BadRequest(c, "brand_color must be a 6-digit hex color")
+				return
+			}
 		}
 	}
 

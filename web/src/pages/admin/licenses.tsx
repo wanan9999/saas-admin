@@ -103,7 +103,7 @@ export default function LicensesPage() {
   if (!isLoading && products.length === 0) {
     return (
       <Page>
-        <PageHeader title={t("licenses.title")} description="Manage software licenses." />
+        <PageHeader title={t("licenses.title")} description={t("licenses.subtitle")} />
         <Card>
           <CardContent className="py-12 text-center">
             <Package className="h-12 w-12 mx-auto text-muted-foreground mb-4" />
@@ -111,7 +111,7 @@ export default function LicensesPage() {
             <p className="text-muted-foreground mt-1 mb-4">{t("licenses.noProductsDesc")}</p>
             <Button asChild>
               <Link to="/admin/products">
-                <Plus className="h-4 w-4 mr-2" /> Create Product
+                <Plus className="h-4 w-4 mr-2" /> {t("products.createTitle")}
               </Link>
             </Button>
           </CardContent>
@@ -124,7 +124,7 @@ export default function LicensesPage() {
     <Page>
       <PageHeader
         title={t("licenses.title")}
-        description={`${total} ${t("licenses.title").toLowerCase()} total`}
+        description={t("licenses.total", { total })}
         actions={
           <Button onClick={() => setCreating(true)}>
             <Plus />
@@ -153,7 +153,7 @@ export default function LicensesPage() {
             setPage(0)
           }}
         >
-          <SelectTrigger className="w-48">
+          <SelectTrigger className="w-full sm:w-48">
             <SelectValue placeholder={t("filter.allProducts")} />
           </SelectTrigger>
           <SelectContent>
@@ -172,7 +172,7 @@ export default function LicensesPage() {
             setPage(0)
           }}
         >
-          <SelectTrigger className="w-40">
+          <SelectTrigger className="w-full sm:w-40">
             <SelectValue placeholder={t("filter.allStatuses")} />
           </SelectTrigger>
           <SelectContent>
@@ -367,7 +367,7 @@ function CreateLicenseDialog({
             <Label>{t("common.plan")}</Label>
             <Select value={planId} onValueChange={setPlanId}>
               <SelectTrigger>
-                <SelectValue placeholder="Select a plan" />
+                <SelectValue placeholder={t("licenses.selectPlan")} />
               </SelectTrigger>
               <SelectContent>
                 {plans.map((p) => (
@@ -594,7 +594,7 @@ function LicenseDetail({ id, onClose }: { id: string; onClose: () => void }) {
                         <div className="flex items-center gap-1">
                           <Input
                             type="date"
-                            className="h-7 w-40 text-xs"
+                            className="h-7 w-full text-xs sm:w-40"
                             value={editingValidUntil}
                             onChange={(e) => setEditingValidUntil(e.target.value)}
                           />
@@ -1123,7 +1123,7 @@ function ChangePlanDialog({
             <Label>{t("common.plan")}</Label>
             <Select value={planId} onValueChange={setPlanId}>
               <SelectTrigger>
-                <SelectValue placeholder="Select a plan" />
+                <SelectValue placeholder={t("licenses.selectPlan")} />
               </SelectTrigger>
               <SelectContent>
                 {plans.map((p) => (

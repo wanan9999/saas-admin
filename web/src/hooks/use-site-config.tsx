@@ -1,29 +1,31 @@
-import { createContext, type ReactNode, useContext, useEffect, useState } from "react"
+import { createContext, type ReactNode, useCallback, useContext, useEffect, useState } from "react"
+import { LoadingScreen } from "@/components/ui/loading-screen"
 import { site } from "@/lib/api"
 
 interface SiteConfig {
   site_name: string
   brand_color: string
   logo_url: string
-  timezone: string
   language: string
   attribution_text: string
   attribution_url: string
   loading: boolean
+  refresh: () => Promise<void>
 }
 
-const defaults: SiteConfig = {
+type SiteConfigState = Omit<SiteConfig, "refresh">
+
+const defaults: SiteConfigState = {
   site_name: "saas-admin",
   brand_color: "",
   logo_url: "",
-  timezone: "UTC",
   language: "",
   attribution_text: "Powered by Keygate",
   attribution_url: "https://keygate.app",
   loading: true,
 }
 
-const SiteConfigContext = createContext<SiteConfig>(defaults)
+const SiteConfigContext = createContext<SiteConfig>({ ...defaults, refresh: async () => {} })
 
 const THEME_PROPERTIES = [
   "--primary",
@@ -34,7 +36,7 @@ const THEME_PROPERTIES = [
   "--sidebar-accent",
 ] as const
 
-export function applyBrandColor(color: string) {
+function applyBrandColor(color: string) {
   const root = document.documentElement
   if (!color) {
     for (const property of THEME_PROPERTIES) root.style.removeProperty(property)
@@ -56,46 +58,46 @@ export function applyBrandColor(color: string) {
 }
 
 export function SiteConfigProvider({ children }: { children: ReactNode }) {
-  const [config, setConfig] = useState<SiteConfig>(defaults)
+  const [config, setConfig] = useState<SiteConfigState>(defaults)
 
-  useEffect(() => {
-    site
-      .config()
-      .then((data) => {
-        setConfig({
-          site_name: data.site_name || "saas-admin",
-          brand_color: data.brand_color || "",
-          logo_url: data.logo_url || "",
-          timezone: data.timezone || "UTC",
-          language: data.language || "",
-          attribution_text: data.attribution_text || "Powered by Keygate",
-          attribution_url: data.attribution_url || "https://keygate.app",
-          loading: false,
-        })
-        // Dynamic favicon from custom logo. index.html declares
-        // multiple <link rel="icon"> variants and browsers pick their
-        // favorite (often the sizes="32x32" one), so rewriting only
-        // the first link never visibly changed the tab icon — update
-        // them all.
-        if (data.logo_url) {
-          document.querySelectorAll<HTMLLinkElement>("link[rel~='icon']").forEach((link) => {
-            link.href = data.logo_url
-          })
-        }
-        applyBrandColor(data.brand_color || "")
-        if (data.site_name) {
-          document.title = data.site_name
-        }
-        // Set default language if user hasn't explicitly chosen one
-        if (data.language && !localStorage.getItem("saas-admin_locale")) {
-          localStorage.setItem("saas-admin_locale", data.language)
-          document.documentElement.lang = data.language
-        }
+  const refresh = useCallback(async () => {
+    try {
+      const data = await site.config()
+      setConfig({
+        site_name: data.site_name || "saas-admin",
+        brand_color: data.brand_color || "",
+        logo_url: data.logo_url || "",
+        language: data.language || "",
+        attribution_text: data.attribution_text || "Powered by Keygate",
+        attribution_url: data.attribution_url || "https://keygate.app",
+        loading: false,
       })
-      .catch(() => setConfig({ ...defaults, loading: false }))
+      // Dynamic favicon from custom logo. index.html declares
+      // multiple <link rel="icon"> variants and browsers pick their
+      // favorite (often the sizes="32x32" one), so rewriting only
+      // the first link never visibly changed the tab icon — update
+      // them all.
+      document.querySelectorAll<HTMLLinkElement>("link[rel~='icon']").forEach((link) => {
+        link.href = data.logo_url || "/favicon.svg"
+      })
+      applyBrandColor(data.brand_color || "")
+      document.title = data.site_name || "saas-admin"
+      // Set default language if user hasn't explicitly chosen one
+      if (data.language && !localStorage.getItem("saas-admin_locale")) {
+        localStorage.setItem("saas-admin_locale", data.language)
+        document.documentElement.lang = data.language
+      }
+    } catch {
+      setConfig({ ...defaults, loading: false })
+    }
   }, [])
 
-  return <SiteConfigContext.Provider value={config}>{children}</SiteConfigContext.Provider>
+  useEffect(() => {
+    void refresh()
+  }, [refresh])
+
+  if (config.loading) return <LoadingScreen />
+  return <SiteConfigContext.Provider value={{ ...config, refresh }}>{children}</SiteConfigContext.Provider>
 }
 
 export function useSiteConfig() {
