@@ -133,12 +133,12 @@ export default function APIKeysPage() {
           placeholder={t("common.search")}
           value={search}
           onChange={(e) => setSearch(e.target.value)}
-          className="w-64"
+          className="w-full sm:w-64"
         />
       </FilterBar>
 
-      <Card>
-        <CardContent className="pt-6">
+      <Card variant="workspace">
+        <CardContent>
           {isLoading ? (
             <div className="h-32 animate-pulse bg-muted rounded-lg" />
           ) : (

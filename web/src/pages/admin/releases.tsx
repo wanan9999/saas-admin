@@ -1077,8 +1077,8 @@ function SigningKeysSection({ productId }: { productId: string }) {
           <div className="space-y-2">
             {history.map((k) => (
               <div key={k.id} className="bg-muted/50 rounded-md px-3 py-2 text-xs">
-                <div className="flex items-center justify-between">
-                  <code className="truncate flex-1 mr-2">{k.public_key}</code>
+                <div className="flex flex-col gap-1 sm:flex-row sm:items-center sm:justify-between">
+                  <code className="min-w-0 flex-1 truncate sm:mr-2">{k.public_key}</code>
                   <span className="text-muted-foreground shrink-0">
                     rotated {k.rotated_at ? formatDate(k.rotated_at) : "—"}
                   </span>
@@ -1119,8 +1119,8 @@ function ActiveSigningKeyCard({
   return (
     <Card>
       <CardContent className="py-4 space-y-3">
-        <div className="flex items-center justify-between">
-          <div>
+        <div className="flex flex-wrap items-center justify-between gap-3">
+          <div className="min-w-0">
             <p className="font-medium text-sm">Active signing key</p>
             <p className="text-xs text-muted-foreground">Created {formatDate(keyRow.created_at)}</p>
           </div>

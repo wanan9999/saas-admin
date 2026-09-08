@@ -112,12 +112,12 @@ export default function AddonsPage() {
           placeholder={t("common.search")}
           value={search}
           onChange={(e) => setSearch(e.target.value)}
-          className="w-64"
+          className="w-full sm:w-64"
         />
       </FilterBar>
 
-      <Card>
-        <CardContent className="pt-6">
+      <Card variant="workspace">
+        <CardContent>
           {isLoading ? (
             <div className="h-32 animate-pulse bg-muted rounded-lg" />
           ) : (
@@ -260,7 +260,7 @@ function AddonDialog({
           className="space-y-4"
         >
           <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
-            <div className="space-y-2 col-span-2">
+            <div className="space-y-2 sm:col-span-2">
               <Label>{t("common.product")}</Label>
               <Select value={form.product_id} onValueChange={(v) => set("product_id", v)}>
                 <SelectTrigger>
@@ -290,7 +290,7 @@ function AddonDialog({
               <Label>{t("products.slug")}</Label>
               <Input value={form.slug} onChange={(e) => set("slug", e.target.value)} required />
             </div>
-            <div className="space-y-2 col-span-2">
+            <div className="space-y-2 sm:col-span-2">
               <Label>{t("addons.description")}</Label>
               <Input value={form.description} onChange={(e) => set("description", e.target.value)} />
             </div>

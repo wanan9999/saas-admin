@@ -100,8 +100,8 @@ export default function ProductsPage() {
         </div>
       </FilterBar>
 
-      <Card>
-        <CardContent className="pt-6">
+      <Card variant="workspace">
+        <CardContent>
           {isLoading ? (
             <div className="h-32 animate-pulse bg-muted rounded-lg" />
           ) : (

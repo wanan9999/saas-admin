@@ -58,7 +58,7 @@ export default function PortalLicensesPage() {
           </CardContent>
         </Card>
       ) : (
-        <div className="space-y-6">
+        <div className="space-y-4">
           {licenses.map((lic) => (
             <LicenseCard key={lic.id} license={lic} />
           ))}
@@ -103,8 +103,8 @@ function LicenseCard({ license: lic }: { license: PortalLicense }) {
   return (
     <Card>
       <CardHeader>
-        <div className="flex items-center justify-between">
-          <div>
+        <div className="flex flex-col gap-3 min-[420px]:flex-row min-[420px]:items-center min-[420px]:justify-between">
+          <div className="min-w-0">
             <CardTitle className="text-lg">{lic.product?.name || "License"}</CardTitle>
             <p className="text-sm text-muted-foreground mt-1">{lic.plan?.name}</p>
           </div>
@@ -122,7 +122,7 @@ function LicenseCard({ license: lic }: { license: PortalLicense }) {
         </div>
 
         {/* Overview stats */}
-        <div className="grid grid-cols-2 md:grid-cols-4 gap-4 text-sm">
+        <div className="grid grid-cols-2 gap-x-4 gap-y-5 text-sm md:grid-cols-4">
           <div>
             <p className="text-muted-foreground">{t("portal.validFrom")}</p>
             <p className="font-medium">{formatDate(lic.valid_from)}</p>
@@ -290,9 +290,12 @@ function ActivationsSection({ license }: { license: PortalLicense }) {
         ) : (
           <div className="space-y-2">
             {embedded.map((act) => (
-              <div key={act.id} className="flex items-center justify-between bg-muted/50 rounded px-3 py-2 text-sm">
+              <div
+                key={act.id}
+                className="flex min-w-0 items-center justify-between gap-3 rounded-xl bg-muted/50 px-3 py-2 text-sm"
+              >
                 <div className="min-w-0 flex-1">
-                  <div className="flex items-center gap-2">
+                  <div className="flex flex-wrap items-center gap-2">
                     <code className="text-xs truncate">{act.identifier}</code>
                     {act.label && <span className="text-muted-foreground text-xs">({act.label})</span>}
                     <span className="text-xs text-muted-foreground capitalize">{act.identifier_type}</span>
@@ -314,7 +317,7 @@ function ActivationsSection({ license }: { license: PortalLicense }) {
 
   return (
     <div className="space-y-3">
-      <div className="flex items-center justify-between">
+      <div className="flex flex-wrap items-center justify-between gap-2">
         <p className="text-sm font-medium">
           {t("portal.activeDevices")} ({activations.length}
           {max > 0 ? `/${max}` : ""})
@@ -328,9 +331,12 @@ function ActivationsSection({ license }: { license: PortalLicense }) {
       ) : (
         <div className="space-y-2">
           {activations.map((act) => (
-            <div key={act.id} className="flex items-center justify-between bg-muted/50 rounded px-3 py-2 text-sm">
+            <div
+              key={act.id}
+              className="flex min-w-0 items-center justify-between gap-3 rounded-xl bg-muted/50 px-3 py-2 text-sm"
+            >
               <div className="min-w-0 flex-1">
-                <div className="flex items-center gap-2">
+                <div className="flex flex-wrap items-center gap-2">
                   <code className="text-xs truncate">{act.identifier}</code>
                   {act.label && <span className="text-muted-foreground text-xs">({act.label})</span>}
                   <span className="text-xs text-muted-foreground capitalize">{act.identifier_type}</span>
@@ -387,7 +393,10 @@ function EntitlementsSection({ entitlements }: { entitlements: Entitlement[] }) 
     <div className="space-y-2">
       <p className="text-sm font-medium mb-2">{t("portal.featuresIncluded")}</p>
       {entitlements.map((ent) => (
-        <div key={ent.id} className="flex items-center justify-between bg-muted/50 rounded px-3 py-2 text-sm">
+        <div
+          key={ent.id}
+          className="flex flex-wrap items-center justify-between gap-2 rounded-xl bg-muted/50 px-3 py-2 text-sm"
+        >
           <div className="flex items-center gap-2">
             <Check className="h-4 w-4 text-emerald-600 shrink-0" />
             <span className="font-medium">{ent.feature}</span>
@@ -455,7 +464,7 @@ function SeatsSection({ license }: { license: PortalLicense }) {
 
   return (
     <div className="space-y-3">
-      <div className="flex items-center justify-between">
+      <div className="flex flex-wrap items-center justify-between gap-2">
         <p className="text-sm font-medium">
           {t("portal.teamMembers")} ({activeCount}/{maxSeats === 0 ? t("common.unlimitedSymbol") : maxSeats})
         </p>
@@ -525,7 +534,7 @@ function SeatRow({
   const { t } = useI18n()
   const accepted = !!seat.accepted_at
   return (
-    <div className="flex items-center justify-between bg-muted/50 rounded px-3 py-2 text-sm">
+    <div className="flex flex-wrap items-center justify-between gap-2 rounded-xl bg-muted/50 px-3 py-2 text-sm">
       <div className="min-w-0 flex-1">
         <div className="flex items-center gap-2">
           <span className="font-medium truncate">{seat.email}</span>
@@ -663,8 +672,8 @@ function QuotaBar({ entitlement, licenseKey }: { entitlement: Entitlement; licen
 
   return (
     <div className="space-y-1.5">
-      <div className="flex items-center justify-between text-sm">
-        <span className="font-medium">{entitlement.feature}</span>
+      <div className="flex flex-wrap items-center justify-between gap-1 text-sm">
+        <span className="min-w-0 break-words font-medium">{entitlement.feature}</span>
         <span className={cn("text-xs", isWarning ? "text-amber-600 font-medium" : "text-muted-foreground")}>
           {formatNumber(used)} / {formatNumber(limit)} ({Math.round(percentage)}%)
         </span>
@@ -775,12 +784,15 @@ function InvoicesDialog({ licenseId, onClose }: { licenseId: string; onClose: ()
         ) : (
           <div className="space-y-2">
             {invoices.map((inv: any) => (
-              <div key={inv.id} className="flex items-center justify-between bg-muted/50 rounded-lg px-4 py-3 text-sm">
-                <div>
+              <div
+                key={inv.id}
+                className="flex flex-col gap-3 rounded-xl bg-muted/50 px-4 py-3 text-sm sm:flex-row sm:items-center sm:justify-between"
+              >
+                <div className="min-w-0">
                   <p className="font-medium">{inv.number || inv.id}</p>
                   <p className="text-xs text-muted-foreground">{new Date(inv.created * 1000).toLocaleDateString()}</p>
                 </div>
-                <div className="flex items-center gap-3">
+                <div className="flex flex-wrap items-center gap-3">
                   <Badge
                     className={
                       inv.status === "paid" ? "bg-emerald-100 text-emerald-800" : "bg-amber-100 text-amber-800"
@@ -841,8 +853,11 @@ function ChangePlanDialog({ license, onClose }: { license: PortalLicense; onClos
         ) : (
           <div className="space-y-2">
             {plans.map((plan: any) => (
-              <div key={plan.id} className="flex items-center justify-between bg-muted/50 rounded-lg px-4 py-3">
-                <div>
+              <div
+                key={plan.id}
+                className="flex flex-col gap-3 rounded-xl bg-muted/50 px-4 py-3 min-[420px]:flex-row min-[420px]:items-center min-[420px]:justify-between"
+              >
+                <div className="min-w-0">
                   <p className="font-medium text-sm">{plan.name}</p>
                   <p className="text-xs text-muted-foreground">
                     {plan.license_type} · {plan.billing_interval || t("plans.perpetual")}

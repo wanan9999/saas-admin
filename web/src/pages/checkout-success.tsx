@@ -31,7 +31,7 @@ export default function CheckoutSuccessPage() {
 
   return (
     <div className="flex flex-col items-center justify-center min-h-screen bg-muted/30">
-      <Card className="w-full max-w-md text-center">
+      <Card variant="elevated" className="w-full max-w-md text-center">
         <CardHeader>
           <div className="flex justify-center mb-2">
             <img src={logo_url || "/logo.svg"} alt={site_name} className="h-12 w-12" />

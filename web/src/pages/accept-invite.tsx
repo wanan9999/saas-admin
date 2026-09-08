@@ -37,7 +37,7 @@ export default function AcceptInvitePage() {
   if (!token) {
     return (
       <Shell>
-        <Card className="max-w-md">
+        <Card variant="elevated" className="max-w-md">
           <CardHeader>
             <CardTitle className="flex items-center gap-2">
               <XCircle className="h-5 w-5 text-destructive" />
@@ -66,7 +66,7 @@ export default function AcceptInvitePage() {
   if (acceptMut.isError) {
     return (
       <Shell>
-        <Card className="max-w-md">
+        <Card variant="elevated" className="max-w-md">
           <CardHeader>
             <CardTitle className="flex items-center gap-2">
               <XCircle className="h-5 w-5 text-destructive" />
@@ -90,7 +90,7 @@ export default function AcceptInvitePage() {
 
   return (
     <Shell>
-      <Card className="max-w-md">
+      <Card variant="elevated" className="max-w-md">
         <CardHeader>
           <CardTitle className="flex items-center gap-2">
             <CheckCircle2 className="h-5 w-5 text-emerald-600" />

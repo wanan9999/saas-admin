@@ -208,7 +208,7 @@ export default function SettingsPage() {
                 </div>
                 <div className="space-y-2">
                   <Label>{t("settings.brandColor")}</Label>
-                  <div className="flex items-center gap-3">
+                  <div className="flex flex-wrap items-center gap-3">
                     <input
                       type="color"
                       value={form.brand_color || "#7c3aed"}
@@ -229,9 +229,9 @@ export default function SettingsPage() {
                   </div>
                   <p className="text-xs text-muted-foreground">{t("settings.brandColorDesc")}</p>
                 </div>
-                <div className="space-y-2 col-span-2">
+                <div className="space-y-2 md:col-span-2">
                   <Label>{t("settings.logoUrl")}</Label>
-                  <div className="flex items-center gap-3">
+                  <div className="flex flex-wrap items-center gap-3">
                     {form.logo_url && <img src={form.logo_url} alt="Custom logo" className="h-8 w-8 rounded border" />}
                     <Input
                       value={form.logo_url || ""}
@@ -265,7 +265,7 @@ export default function SettingsPage() {
                   <p className="flex items-center gap-2 text-emerald-600">
                     <Check className="h-4 w-4" /> {t("settings.emailConfigured")}
                   </p>
-                  <dl className="grid grid-cols-[auto_1fr] gap-x-6 gap-y-1 text-muted-foreground">
+                  <dl className="grid gap-1 text-muted-foreground sm:grid-cols-[auto_1fr] sm:gap-x-6">
                     <dt>{t("settings.emailHost")}</dt>
                     <dd className="font-mono text-foreground">{data.email.host}</dd>
                     <dt>{t("settings.emailFrom")}</dt>
@@ -276,7 +276,7 @@ export default function SettingsPage() {
                 <p className="text-sm text-muted-foreground">{t("settings.emailNotConfigured")}</p>
               )}
               <p className="text-xs text-muted-foreground">{t("settings.emailEnvHint")}</p>
-              <div className="flex items-center gap-4 pt-2">
+              <div className="flex flex-wrap items-center gap-4 pt-2">
                 <Button variant="outline" onClick={() => testEmailMut.mutate()} disabled={testEmailMut.isPending}>
                   <Send className="h-4 w-4 mr-2" />
                   {t("settings.testEmail")}
@@ -308,7 +308,7 @@ export default function SettingsPage() {
             <CardContent className="space-y-2">
               <Label>{t("settings.signupMode")}</Label>
               <Select value={form.signup_mode || "open"} onValueChange={(v) => set("signup_mode", v)}>
-                <SelectTrigger className="w-72">
+                <SelectTrigger className="w-72 max-w-full">
                   <SelectValue />
                 </SelectTrigger>
                 <SelectContent>
@@ -404,7 +404,7 @@ export default function SettingsPage() {
                 </div>
               </div>
 
-              <div className="flex items-center gap-3 pt-2">
+              <div className="flex flex-wrap items-center gap-3 pt-2">
                 <Button variant="outline" size="sm" onClick={() => updateCheckMut.mutate()} disabled={updateChecking}>
                   <RefreshCw className={`h-4 w-4 mr-2 ${updateChecking ? "animate-spin" : ""}`} />
                   {t("settings.checkUpdate")}
@@ -498,8 +498,11 @@ function TeamManagement() {
           ) : (
             <div className="space-y-2">
               {members.map((m) => (
-                <div key={m.id} className="flex items-center justify-between py-2 px-3 rounded-lg border">
-                  <div className="flex items-center gap-3">
+                <div
+                  key={m.id}
+                  className="flex flex-col gap-3 rounded-xl border px-3 py-3 min-[420px]:flex-row min-[420px]:items-center min-[420px]:justify-between"
+                >
+                  <div className="flex min-w-0 items-center gap-3">
                     {m.avatar_url ? (
                       <img src={m.avatar_url} className="h-8 w-8 rounded-full" alt="" />
                     ) : (
@@ -507,9 +510,9 @@ function TeamManagement() {
                         {m.name?.charAt(0)?.toUpperCase() || m.email.charAt(0).toUpperCase()}
                       </div>
                     )}
-                    <div>
-                      <div className="font-medium text-sm">{m.name || m.email}</div>
-                      <div className="text-xs text-muted-foreground">{m.email}</div>
+                    <div className="min-w-0">
+                      <div className="truncate text-sm font-medium">{m.name || m.email}</div>
+                      <div className="truncate text-xs text-muted-foreground">{m.email}</div>
                     </div>
                   </div>
                   <div className="flex items-center gap-2">

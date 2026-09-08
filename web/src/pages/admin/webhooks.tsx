@@ -188,12 +188,12 @@ export default function WebhooksPage() {
           placeholder={t("common.search")}
           value={search}
           onChange={(e) => setSearch(e.target.value)}
-          className="w-64"
+          className="w-full sm:w-64"
         />
       </FilterBar>
 
-      <Card>
-        <CardContent className="pt-6">
+      <Card variant="workspace">
+        <CardContent>
           {isLoading ? (
             <div className="h-32 animate-pulse bg-muted rounded-lg" />
           ) : (
@@ -589,7 +589,7 @@ function DeliveryLogDialog({ webhookId, onClose }: { webhookId: string; onClose:
                       <DataTableRow key={`${d.id}-detail`}>
                         <DataTableCell colSpan={6}>
                           <div className="space-y-2 p-2">
-                            <div className="flex items-center justify-between">
+                            <div className="flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
                               <span className="text-[11px] font-mono text-muted-foreground break-all">id: {d.id}</span>
                               {/* Resend re-fires the same event payload as a
                                   new delivery. We disable it while the

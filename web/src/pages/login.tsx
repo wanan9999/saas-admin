@@ -108,7 +108,7 @@ export default function LoginPage() {
   return (
     <div className="relative flex min-h-screen flex-col items-center justify-center overflow-hidden bg-background p-4">
       <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_top_left,color-mix(in_oklab,var(--primary)_14%,transparent),transparent_35%),radial-gradient(circle_at_bottom_right,color-mix(in_oklab,var(--primary)_9%,transparent),transparent_30%)]" />
-      <Card className="relative w-full max-w-sm border-border/80 shadow-2xl shadow-slate-950/5">
+      <Card variant="elevated" className="relative w-full max-w-sm border-border/80">
         <CardHeader className="text-center">
           <div className="flex justify-center mb-2">
             <img src={logo_url || "/logo.svg"} alt={site_name} className="h-12 w-12" />

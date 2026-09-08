@@ -41,7 +41,7 @@ export default function DashboardPage() {
 
       <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
         {cards.map((c) => (
-          <Card key={c.label}>
+          <Card key={c.label} variant="metric">
             <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
               <CardTitle className="text-sm font-medium">{c.label}</CardTitle>
               <c.icon className={`h-4 w-4 ${c.color}`} />
@@ -74,7 +74,7 @@ export default function DashboardPage() {
 
       {/* Recent licenses */}
       {stats.recent_licenses?.length > 0 && (
-        <Card>
+        <Card variant="workspace">
           <CardHeader>
             <CardTitle className="text-base">{t("dashboard.recentLicenses")}</CardTitle>
           </CardHeader>

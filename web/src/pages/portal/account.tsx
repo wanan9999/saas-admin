@@ -52,7 +52,7 @@ export default function PortalAccountPage() {
 
       {/* Profile card */}
       <Card>
-        <CardHeader className="flex flex-row items-center justify-between">
+        <CardHeader className="flex flex-col gap-3 space-y-0 min-[420px]:flex-row min-[420px]:items-center min-[420px]:justify-between">
           <CardTitle className="text-lg">{t("portal.profile")}</CardTitle>
           {!editing && (
             <Button variant="outline" size="sm" onClick={startEdit}>
@@ -62,7 +62,7 @@ export default function PortalAccountPage() {
           )}
         </CardHeader>
         <CardContent className="space-y-4">
-          <div className="flex items-center gap-4">
+          <div className="flex flex-col gap-4 min-[420px]:flex-row min-[420px]:items-center">
             {user?.avatar_url ? (
               <img src={user.avatar_url} alt={user.name} className="h-16 w-16 rounded-full border" />
             ) : (
@@ -70,9 +70,9 @@ export default function PortalAccountPage() {
                 {user?.name?.charAt(0)?.toUpperCase() || user?.email?.charAt(0)?.toUpperCase()}
               </div>
             )}
-            <div className="flex-1">
+            <div className="min-w-0 flex-1">
               {editing ? (
-                <div className="flex items-center gap-2">
+                <div className="flex flex-col gap-2 sm:flex-row sm:items-end">
                   <div className="flex-1 space-y-2">
                     <label htmlFor="profile-name" className="text-xs text-muted-foreground">
                       {t("portal.displayName")}
@@ -90,7 +90,7 @@ export default function PortalAccountPage() {
                       }}
                     />
                   </div>
-                  <div className="flex gap-1 mt-5">
+                  <div className="flex gap-1 sm:mb-0.5">
                     <Button
                       size="icon"
                       variant="ghost"
@@ -174,8 +174,11 @@ export default function PortalAccountPage() {
           ) : (
             <div className="space-y-2">
               {licenses.map((lic) => (
-                <div key={lic.id} className="flex items-center justify-between bg-muted/50 rounded-lg px-4 py-3">
-                  <div>
+                <div
+                  key={lic.id}
+                  className="flex flex-col gap-3 rounded-xl border-b bg-muted/35 px-4 py-3 last:border-b-0 min-[420px]:flex-row min-[420px]:items-center min-[420px]:justify-between"
+                >
+                  <div className="min-w-0">
                     <p className="font-medium text-sm">{lic.product?.name || "License"}</p>
                     <p className="text-xs text-muted-foreground">
                       {lic.plan?.name} &middot; {t("licenses.validUntil")} {formatDate(lic.valid_until)}

@@ -186,8 +186,8 @@ export default function LicensesPage() {
         </Select>
       </FilterBar>
 
-      <Card>
-        <CardContent className="pt-6">
+      <Card variant="workspace">
+        <CardContent>
           {isLoading ? (
             <div className="h-64 animate-pulse bg-muted rounded-lg" />
           ) : (

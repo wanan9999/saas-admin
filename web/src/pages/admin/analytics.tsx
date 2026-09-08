@@ -357,7 +357,7 @@ export default function AnalyticsPage() {
           {/* Summary Cards - Row 1 */}
           <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
             {summaryCards.slice(0, 4).map((c) => (
-              <Card key={c.label}>
+              <Card key={c.label} variant="metric">
                 <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
                   <CardTitle className="text-sm font-medium">{c.label}</CardTitle>
                   <c.icon className={`h-4 w-4 ${c.color}`} />
@@ -369,18 +369,21 @@ export default function AnalyticsPage() {
             ))}
           </div>
 
-          {/* Summary Cards - Row 2 */}
-          <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
+          {/* Secondary states stay visually lighter than the primary metrics. */}
+          <div className="grid grid-cols-2 overflow-hidden rounded-xl border bg-card/35 md:grid-cols-4">
             {summaryCards.slice(4).map((c) => (
-              <Card key={c.label}>
-                <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                  <CardTitle className="text-sm font-medium">{c.label}</CardTitle>
-                  <c.icon className={`h-4 w-4 ${c.color}`} />
-                </CardHeader>
-                <CardContent>
-                  <div className="text-3xl font-bold">{c.value.toLocaleString()}</div>
-                </CardContent>
-              </Card>
+              <div
+                key={c.label}
+                className="flex min-w-0 items-center gap-3 border-b p-4 last:border-b-0 odd:border-r md:border-b-0 md:border-r md:last:border-r-0"
+              >
+                <span className="flex size-9 shrink-0 items-center justify-center rounded-lg bg-background">
+                  <c.icon className={`size-4 ${c.color}`} />
+                </span>
+                <div className="min-w-0">
+                  <div className="text-xl font-semibold tabular-nums">{c.value.toLocaleString()}</div>
+                  <div className="truncate text-xs text-muted-foreground">{c.label}</div>
+                </div>
+              </div>
             ))}
           </div>
 
@@ -681,7 +684,7 @@ export default function AnalyticsPage() {
                 <div className="space-y-6">
                   {/* Growth Metrics */}
                   <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
-                    <Card>
+                    <Card variant="metric">
                       <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
                         <CardTitle className="text-sm font-medium">{t("analytics.growthRate")}</CardTitle>
                         {insights.growth.net_growth_rate >= 0 ? (
@@ -698,7 +701,7 @@ export default function AnalyticsPage() {
                         </div>
                       </CardContent>
                     </Card>
-                    <Card>
+                    <Card variant="metric">
                       <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
                         <CardTitle className="text-sm font-medium">{t("analytics.trialConversion")}</CardTitle>
                         <Activity className="h-4 w-4 text-violet-600" />
@@ -710,7 +713,7 @@ export default function AnalyticsPage() {
                         </p>
                       </CardContent>
                     </Card>
-                    <Card>
+                    <Card variant="metric">
                       <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
                         <CardTitle className="text-sm font-medium">{t("analytics.newLast30d")}</CardTitle>
                         <TrendingUp className="h-4 w-4 text-emerald-600" />
@@ -719,7 +722,7 @@ export default function AnalyticsPage() {
                         <div className="text-3xl font-bold">{insights.growth.new_last_30d.toLocaleString()}</div>
                       </CardContent>
                     </Card>
-                    <Card>
+                    <Card variant="metric">
                       <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
                         <CardTitle className="text-sm font-medium">{t("analytics.churnedLast30d")}</CardTitle>
                         <TrendingDown className="h-4 w-4 text-red-600" />

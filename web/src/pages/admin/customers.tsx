@@ -58,8 +58,8 @@ export default function CustomersPage() {
         </div>
       </FilterBar>
 
-      <Card>
-        <CardContent className="pt-6">
+      <Card variant="workspace">
+        <CardContent>
           {isLoading ? (
             <div className="h-64 animate-pulse bg-muted rounded-lg" />
           ) : (
@@ -175,34 +175,30 @@ function CustomerDetailDialog({
             <TabsContent value="overview">
               <div className="space-y-4">
                 {/* User info */}
-                <Card>
-                  <CardContent className="pt-6">
-                    <div className="flex items-center gap-4">
-                      {detail.user.avatar_url ? (
-                        <img src={detail.user.avatar_url} className="h-14 w-14 rounded-full" alt="" />
-                      ) : (
-                        <div className="h-14 w-14 rounded-full bg-muted flex items-center justify-center text-lg font-bold">
-                          {detail.user.name?.charAt(0)?.toUpperCase() || detail.user.email.charAt(0).toUpperCase()}
-                        </div>
-                      )}
-                      <div>
-                        <h3 className="text-lg font-semibold">{detail.user.name || "-"}</h3>
-                        <p className="text-sm text-muted-foreground">{detail.user.email}</p>
-                        <div className="flex gap-4 mt-1 text-xs text-muted-foreground">
-                          <span>
-                            {t("customers.joined")} {formatDate(detail.user.created_at)}
-                          </span>
-                          <span>
-                            {t("customers.lastUpdated")} {formatDate(detail.user.updated_at)}
-                          </span>
-                        </div>
-                      </div>
+                <div className="flex flex-col gap-4 border-b pb-4 min-[420px]:flex-row min-[420px]:items-center">
+                  {detail.user.avatar_url ? (
+                    <img src={detail.user.avatar_url} className="h-14 w-14 rounded-full object-cover" alt="" />
+                  ) : (
+                    <div className="flex h-14 w-14 shrink-0 items-center justify-center rounded-full bg-muted text-lg font-bold">
+                      {detail.user.name?.charAt(0)?.toUpperCase() || detail.user.email.charAt(0).toUpperCase()}
                     </div>
-                  </CardContent>
-                </Card>
+                  )}
+                  <div className="min-w-0">
+                    <h3 className="text-lg font-semibold">{detail.user.name || "-"}</h3>
+                    <p className="break-all text-sm text-muted-foreground">{detail.user.email}</p>
+                    <div className="mt-1 flex flex-wrap gap-x-4 gap-y-1 text-xs text-muted-foreground">
+                      <span>
+                        {t("customers.joined")} {formatDate(detail.user.created_at)}
+                      </span>
+                      <span>
+                        {t("customers.lastUpdated")} {formatDate(detail.user.updated_at)}
+                      </span>
+                    </div>
+                  </div>
+                </div>
 
                 {/* Summary stats */}
-                <div className="grid grid-cols-5 gap-3">
+                <div className="grid grid-cols-2 gap-3 sm:grid-cols-3 lg:grid-cols-5">
                   {[
                     { label: t("analytics.totalLicenses"), value: detail.licenses?.length ?? 0 },
                     {
@@ -213,7 +209,7 @@ function CustomerDetailDialog({
                     { label: t("customers.activeSeats"), value: detail.active_seats ?? 0 },
                     { label: t("analytics.activations"), value: detail.activations ?? 0 },
                   ].map((s) => (
-                    <Card key={s.label}>
+                    <Card key={s.label} variant="metric">
                       <CardContent className="pt-4 pb-3 text-center">
                         <div className="text-2xl font-bold">{s.value.toLocaleString()}</div>
                         <p className="text-xs text-muted-foreground">{s.label}</p>
@@ -227,11 +223,7 @@ function CustomerDetailDialog({
             {/* Licenses Tab */}
             <TabsContent value="licenses">
               {(detail.licenses || []).length === 0 ? (
-                <Card>
-                  <CardContent className="py-8">
-                    <p className="text-sm text-muted-foreground text-center">No licenses found.</p>
-                  </CardContent>
-                </Card>
+                <p className="py-10 text-center text-sm text-muted-foreground">No licenses found.</p>
               ) : (
                 <DataTable>
                   <DataTableHeader>
@@ -276,11 +268,7 @@ function CustomerDetailDialog({
             {/* Subscriptions Tab */}
             <TabsContent value="subscriptions">
               {(detail.subscriptions || []).length === 0 ? (
-                <Card>
-                  <CardContent className="py-8">
-                    <p className="text-sm text-muted-foreground text-center">No subscriptions found.</p>
-                  </CardContent>
-                </Card>
+                <p className="py-10 text-center text-sm text-muted-foreground">No subscriptions found.</p>
               ) : (
                 <DataTable>
                   <DataTableHeader>
@@ -333,16 +321,17 @@ function CustomerDetailDialog({
             {/* Activity Tab */}
             <TabsContent value="activity">
               {(detail.recent_audit_logs || []).length === 0 ? (
-                <Card>
-                  <CardContent className="py-8">
-                    <p className="text-sm text-muted-foreground text-center">No recent activity.</p>
-                  </CardContent>
-                </Card>
+                <p className="py-10 text-center text-sm text-muted-foreground">No recent activity.</p>
               ) : (
                 <div className="space-y-2">
                   {detail.recent_audit_logs.map((a) => (
-                    <div key={a.id} className="flex items-center gap-3 py-2 border-b last:border-0 text-sm">
-                      <span className="text-xs text-muted-foreground w-36 shrink-0">{formatDate(a.created_at)}</span>
+                    <div
+                      key={a.id}
+                      className="flex flex-wrap items-center gap-2 border-b py-2 text-sm last:border-0 sm:flex-nowrap sm:gap-3"
+                    >
+                      <span className="w-full text-xs text-muted-foreground sm:w-36 sm:shrink-0">
+                        {formatDate(a.created_at)}
+                      </span>
                       <Badge variant="outline" className="shrink-0">
                         {a.entity}
                       </Badge>

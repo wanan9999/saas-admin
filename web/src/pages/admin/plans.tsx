@@ -116,7 +116,7 @@ export default function PlansPage() {
           placeholder={t("common.search")}
           value={search}
           onChange={(e) => setSearch(e.target.value)}
-          className="w-64"
+          className="w-full sm:w-64"
         />
         <Select value={productFilter} onValueChange={setProductFilter}>
           <SelectTrigger className="w-48">
@@ -133,8 +133,8 @@ export default function PlansPage() {
         </Select>
       </FilterBar>
 
-      <Card>
-        <CardContent className="pt-6">
+      <Card variant="workspace">
+        <CardContent>
           {isLoading ? (
             <div className="h-32 animate-pulse bg-muted rounded-lg" />
           ) : (
@@ -364,7 +364,7 @@ function PlanDialog({
           className="space-y-4"
         >
           <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
-            <div className="space-y-2 col-span-2">
+            <div className="space-y-2 sm:col-span-2">
               <Label>{t("common.product")}</Label>
 
               <Select value={form.product_id} onValueChange={(v) => set("product_id", v)}>
@@ -619,7 +619,7 @@ function EntitlementSection({ planId, entitlements: initial }: { planId: string;
 
   return (
     <div className="space-y-3">
-      <div className="flex items-center justify-between">
+      <div className="flex flex-wrap items-center justify-between gap-3">
         <h4 className="text-sm font-semibold">{t("plans.entitlements")}</h4>
         <Button type="button" variant="outline" size="sm" onClick={() => setAdding(!adding)}>
           <Plus className="h-3 w-3 mr-1" /> {t("common.create")}
@@ -628,8 +628,11 @@ function EntitlementSection({ planId, entitlements: initial }: { planId: string;
       {entitlements.length > 0 && (
         <div className="space-y-2">
           {entitlements.map((e) => (
-            <div key={e.id} className="flex items-center justify-between bg-muted/50 rounded px-3 py-2 text-sm">
-              <div>
+            <div
+              key={e.id}
+              className="flex flex-col gap-2 rounded-xl bg-muted/50 px-3 py-2 text-sm min-[420px]:flex-row min-[420px]:items-center min-[420px]:justify-between"
+            >
+              <div className="min-w-0">
                 <span className="font-medium">{e.feature}</span>
                 <span className="text-muted-foreground ml-2">
                   ({e.value_type}: {e.value})
@@ -719,7 +722,7 @@ function EntitlementSection({ planId, entitlements: initial }: { planId: string;
                     meter event the background sync pushes to Stripe.
                     Configure the meter (and event_name) in your Stripe
                     dashboard first. */}
-                <div className="space-y-2 col-span-2">
+                <div className="space-y-2 sm:col-span-2">
                   <Label className="text-xs">{t("plans.stripeMeterEventName")}</Label>
                   <Input
                     value={newEnt.stripe_meter_event_name}

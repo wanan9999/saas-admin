@@ -98,7 +98,7 @@ export default function AuditPage() {
             setEntityIdFilter(e.target.value)
             setPage(0)
           }}
-          className="w-64"
+          className="w-full sm:w-64"
         />
         <Select
           value={productFilter || "all"}
@@ -107,7 +107,7 @@ export default function AuditPage() {
             setPage(0)
           }}
         >
-          <SelectTrigger className="w-64">
+          <SelectTrigger className="w-full sm:w-64">
             <SelectValue placeholder={t("audit.filterProduct")} />
           </SelectTrigger>
           <SelectContent>
@@ -134,8 +134,8 @@ export default function AuditPage() {
         </Select>
       </FilterBar>
 
-      <Card>
-        <CardContent className="pt-6">
+      <Card variant="workspace">
+        <CardContent>
           {isLoading ? (
             <div className="h-64 animate-pulse bg-muted rounded-lg" />
           ) : (

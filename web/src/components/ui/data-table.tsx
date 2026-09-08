@@ -8,7 +8,7 @@ import { cn } from "@/lib/utils"
 
 const DataTable = React.forwardRef<HTMLTableElement, React.HTMLAttributes<HTMLTableElement>>(
   ({ className, ...props }, ref) => (
-    <div className="relative w-full overflow-auto rounded-xl border bg-card">
+    <div className="ui-data-table relative w-full overflow-auto rounded-xl border bg-card/55">
       <table
         ref={ref}
         className={cn("w-full min-w-[640px] caption-bottom border-collapse text-sm", className)}
@@ -37,7 +37,10 @@ const DataTableRow = React.forwardRef<HTMLTableRowElement, React.HTMLAttributes<
   ({ className, ...props }, ref) => (
     <tr
       ref={ref}
-      className={cn("border-b transition-colors hover:bg-muted/45 data-[state=selected]:bg-accent", className)}
+      className={cn(
+        "border-b transition-colors duration-150 hover:bg-accent/45 data-[state=selected]:bg-accent",
+        className,
+      )}
       {...props}
     />
   ),

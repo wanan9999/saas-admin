@@ -121,22 +121,25 @@ export default function EmailTemplatesManager() {
                 const isCustomized = !!tmpl?.custom
 
                 return (
-                  <div key={key} className="flex items-center justify-between p-3 border rounded-lg">
-                    <div className="flex items-center gap-3">
+                  <div
+                    key={key}
+                    className="flex flex-col gap-3 rounded-xl border p-3 min-[420px]:flex-row min-[420px]:items-center min-[420px]:justify-between"
+                  >
+                    <div className="flex min-w-0 items-center gap-3">
                       <Code className="h-4 w-4 text-muted-foreground" />
-                      <div>
+                      <div className="min-w-0">
                         <span className="text-sm font-medium">{meta.label}</span>
                         {isCustomized && (
                           <Badge variant="secondary" className="ml-2 text-xs">
                             customized
                           </Badge>
                         )}
-                        <div className="text-xs text-muted-foreground mt-0.5">
+                        <div className="mt-0.5 break-words text-xs text-muted-foreground">
                           {meta.variables.map((v) => `{{.${v}}}`).join(", ")}
                         </div>
                       </div>
                     </div>
-                    <div className="flex items-center gap-1">
+                    <div className="flex shrink-0 items-center gap-1 self-end min-[420px]:self-auto">
                       <Button
                         variant="ghost"
                         size="icon"

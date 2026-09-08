@@ -122,10 +122,16 @@ button, a, [role="button"] { -webkit-tap-highlight-color: transparent; }
 @keyframes ui-content-in { from { opacity: 0; transform: translate(-50%, -48%) scale(.97); } to { opacity: 1; transform: translate(-50%, -50%) scale(1); } }
 @keyframes ui-menu-in { from { opacity: 0; transform: translateY(-4px) scale(.98); } to { opacity: 1; transform: translateY(0) scale(1); } }
 @keyframes ui-toast-in { from { opacity: 0; transform: translateY(12px) scale(.98); } to { opacity: 1; transform: translateY(0) scale(1); } }
+@keyframes ui-page-in { from { opacity: 0; transform: translateY(5px); } to { opacity: 1; transform: translateY(0); } }
 .ui-overlay[data-state="open"] { animation: ui-overlay-in 160ms ease-out; }
 .ui-dialog[data-state="open"] { animation: ui-content-in 180ms cubic-bezier(.16, 1, .3, 1); }
 .ui-menu[data-state="open"] { animation: ui-menu-in 140ms cubic-bezier(.16, 1, .3, 1); }
 .ui-toast { animation: ui-toast-in 180ms cubic-bezier(.16, 1, .3, 1); }
+.ui-page { animation: ui-page-in 220ms cubic-bezier(.16, 1, .3, 1); }
+.ui-card[data-variant="workspace"] > .ui-card-content { padding: 0; }
+.ui-card[data-variant="workspace"] .ui-data-table { border-radius: 0.875rem; }
+.ui-tabs-list { scrollbar-width: none; }
+.ui-tabs-list::-webkit-scrollbar { display: none; }
 
 @media (prefers-reduced-motion: reduce) {
   *, *::before, *::after {
