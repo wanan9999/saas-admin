@@ -20,6 +20,7 @@ import { Page, PageHeader } from "@/components/ui/page"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { useAuth } from "@/hooks/use-auth"
+import { applyBrandColor } from "@/hooks/use-site-config"
 import { useI18n } from "@/i18n"
 import type { User } from "@/lib/api"
 import { admin } from "@/lib/api"
@@ -100,6 +101,7 @@ export default function SettingsPage() {
       admin.updateSettings(Object.fromEntries(FORM_KEYS.filter((k) => k in form).map((k) => [k, form[k]]))),
     onSuccess: () => {
       qc.invalidateQueries({ queryKey: ["admin", "settings"] })
+      applyBrandColor(form.brand_color || "")
       setSaved(true)
       setTimeout(() => setSaved(false), 3000)
     },

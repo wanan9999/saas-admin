@@ -333,7 +333,7 @@ const en = {
   "settings.language": "Language",
   "settings.languageDesc": "Interface language.",
   "settings.brandColor": "Brand Color",
-  "settings.brandColorDesc": "Primary color used throughout the interface. Leave empty for default.",
+  "settings.brandColorDesc": "Used for primary buttons, links, selected states, focus rings, and sidebar highlights.",
   "settings.logoUrl": "Custom Logo URL",
   "settings.logoUrlDesc": "URL to your logo (SVG recommended). Leave empty for the default saas-admin logo.",
   "settings.emailConfigured": "Outgoing email is configured.",
@@ -407,6 +407,11 @@ const en = {
   "login.resendCode": "Resend code",
   "login.resendIn": "Resend in {seconds}s",
   "login.or": "or",
+  "login.secureAccess": "Secure access",
+  "login.welcomeTitle": "Welcome back to your business control center",
+  "login.welcomeDesc": "Manage products, licenses, customers, and software releases in one focused workspace.",
+  "login.passwordless": "Secure passwordless access with an email verification code",
+  "login.devMode": "Development mode",
 
   // Checkout
   "checkout.verifying": "Verifying your payment...",

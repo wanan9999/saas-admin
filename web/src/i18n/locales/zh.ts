@@ -324,7 +324,7 @@ const zh = {
   "settings.language": "语言",
   "settings.languageDesc": "界面语言。",
   "settings.brandColor": "品牌颜色",
-  "settings.brandColorDesc": "整个界面使用的主色调。留空则使用默认紫色。",
+  "settings.brandColorDesc": "用于主按钮、链接、选中状态、焦点框和侧栏高亮。留空恢复默认紫色。",
   "settings.logoUrl": "自定义 Logo URL",
   "settings.logoUrlDesc": "Logo 图片的 URL（推荐 SVG 格式）。留空则使用默认 saas-admin Logo。",
   "settings.emailConfigured": "外发邮件已配置。",
@@ -395,6 +395,11 @@ const zh = {
   "login.resendCode": "重新发送",
   "login.resendIn": "{seconds}秒后可重发",
   "login.or": "或",
+  "login.secureAccess": "安全访问",
+  "login.welcomeTitle": "欢迎回到您的业务控制中心",
+  "login.welcomeDesc": "集中管理产品、许可证、客户与软件发布，让每一次运营决策都清晰高效。",
+  "login.passwordless": "使用邮箱验证码安全登录，无需记忆密码",
+  "login.devMode": "开发模式",
 
   // Checkout
   "checkout.verifying": "正在验证您的付款...",

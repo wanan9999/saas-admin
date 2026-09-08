@@ -63,6 +63,8 @@ import {
 import { formatDate } from "@/lib/utils"
 
 const PAGE_SIZE = 20
+const CHANNEL_LABELS: Record<string, string> = { stable: "稳定版", beta: "测试版", alpha: "预览版", dev: "开发版" }
+const STATUS_LABELS: Record<string, string> = { draft: "草稿", published: "已发布", yanked: "已撤回" }
 
 export default function ReleasesPage() {
   const qc = useQueryClient()
@@ -107,7 +109,7 @@ export default function ReleasesPage() {
     mutationFn: admin.publishRelease,
     onSuccess: () => {
       qc.invalidateQueries({ queryKey: ["admin", "releases"] })
-      showToast("Release published", "success")
+      showToast("版本已发布", "success")
     },
     onError: (e: Error) => showToast(e.message, "error"),
   })
@@ -115,7 +117,7 @@ export default function ReleasesPage() {
     mutationFn: admin.unyankRelease,
     onSuccess: () => {
       qc.invalidateQueries({ queryKey: ["admin", "releases"] })
-      showToast("Release unyanked", "success")
+      showToast("版本已恢复发布", "success")
       setUnyanking(null)
     },
     onError: (e: Error) => showToast(e.message, "error"),
@@ -125,7 +127,7 @@ export default function ReleasesPage() {
     onSuccess: () => {
       qc.invalidateQueries({ queryKey: ["admin", "releases"] })
       setDeleting(null)
-      showToast("Draft deleted", "success")
+      showToast("草稿已删除", "success")
     },
     onError: (e: Error) => showToast(e.message, "error"),
   })
@@ -136,30 +138,26 @@ export default function ReleasesPage() {
     const hasAnyProducts = (productsData?.products || []).length > 0
     return (
       <Page>
-        <PageHeader
-          title="Releases"
-          description="Distribute software updates to your customers via Sparkle, Velopack, or Tauri."
-        />
+        <PageHeader title="发布管理" description="通过 Sparkle、Velopack 或 Tauri 向客户分发软件更新。" />
         <Card>
           <CardContent className="py-12 text-center">
             <Package className="h-12 w-12 mx-auto text-muted-foreground mb-4" />
             {hasAnyProducts ? (
               <>
-                <p className="text-lg font-medium">No release-eligible products</p>
+                <p className="text-lg font-medium">没有可发布版本的产品</p>
                 <p className="text-muted-foreground mt-1 mb-4">
-                  Release feeds are available for desktop and hybrid products only. Your existing products are all SaaS
-                  — change a product's type or create a new desktop/hybrid one.
+                  版本更新仅支持桌面端和混合型产品。请修改现有产品类型，或创建新的桌面端/混合型产品。
                 </p>
               </>
             ) : (
               <>
-                <p className="text-lg font-medium">No products yet</p>
-                <p className="text-muted-foreground mt-1 mb-4">Create a product before publishing releases.</p>
+                <p className="text-lg font-medium">暂无产品</p>
+                <p className="text-muted-foreground mt-1 mb-4">请先创建产品，再发布软件版本。</p>
               </>
             )}
             <Button asChild>
               <Link to="/admin/products">
-                <Plus className="h-4 w-4 mr-2" /> {hasAnyProducts ? "Manage products" : "Create product"}
+                <Plus className="h-4 w-4 mr-2" /> {hasAnyProducts ? "管理产品" : "创建产品"}
               </Link>
             </Button>
           </CardContent>
@@ -171,15 +169,15 @@ export default function ReleasesPage() {
   return (
     <Page>
       <PageHeader
-        title="Releases"
-        description="Distribute software updates to your customers via Sparkle, Velopack, or Tauri."
+        title="发布管理"
+        description="通过 Sparkle、Velopack 或 Tauri 向客户分发软件更新。"
         actions={
           <>
             <Button variant="outline" onClick={() => setShowSigningKeys(true)}>
-              <KeyRound /> Signing keys
+              <KeyRound /> 签名密钥
             </Button>
             <Button onClick={() => setCreating(true)}>
-              <Plus /> New release
+              <Plus /> 新建版本
             </Button>
           </>
         }
@@ -187,11 +185,11 @@ export default function ReleasesPage() {
 
       <FilterBar>
         <Select value={productFilter || "all"} onValueChange={(v) => setProductFilter(v === "all" ? "" : v)}>
-          <SelectTrigger className="w-48">
-            <SelectValue placeholder="All products" />
+          <SelectTrigger className="w-full sm:w-48">
+            <SelectValue placeholder="全部产品" />
           </SelectTrigger>
           <SelectContent>
-            <SelectItem value="all">All products</SelectItem>
+            <SelectItem value="all">全部产品</SelectItem>
             {products.map((p) => (
               <SelectItem key={p.id} value={p.id}>
                 {p.name}
@@ -200,27 +198,27 @@ export default function ReleasesPage() {
           </SelectContent>
         </Select>
         <Select value={channelFilter || "all"} onValueChange={(v) => setChannelFilter(v === "all" ? "" : v)}>
-          <SelectTrigger className="w-36">
-            <SelectValue placeholder="All channels" />
+          <SelectTrigger className="w-full sm:w-36">
+            <SelectValue placeholder="全部渠道" />
           </SelectTrigger>
           <SelectContent>
-            <SelectItem value="all">All channels</SelectItem>
+            <SelectItem value="all">全部渠道</SelectItem>
             {RELEASE_CHANNELS.map((c) => (
               <SelectItem key={c} value={c}>
-                {c}
+                {CHANNEL_LABELS[c] || c}
               </SelectItem>
             ))}
           </SelectContent>
         </Select>
         <Select value={statusFilter || "all"} onValueChange={(v) => setStatusFilter(v === "all" ? "" : v)}>
-          <SelectTrigger className="w-36">
-            <SelectValue placeholder="All statuses" />
+          <SelectTrigger className="w-full sm:w-36">
+            <SelectValue placeholder="全部状态" />
           </SelectTrigger>
           <SelectContent>
-            <SelectItem value="all">All statuses</SelectItem>
-            <SelectItem value="draft">Draft</SelectItem>
-            <SelectItem value="published">Published</SelectItem>
-            <SelectItem value="yanked">Yanked</SelectItem>
+            <SelectItem value="all">全部状态</SelectItem>
+            <SelectItem value="draft">草稿</SelectItem>
+            <SelectItem value="published">已发布</SelectItem>
+            <SelectItem value="yanked">已撤回</SelectItem>
           </SelectContent>
         </Select>
       </FilterBar>
@@ -228,20 +226,20 @@ export default function ReleasesPage() {
       <DataTable>
         <DataTableHeader>
           <DataTableRow>
-            <DataTableHead>Product</DataTableHead>
-            <DataTableHead>Version</DataTableHead>
-            <DataTableHead>Channel</DataTableHead>
-            <DataTableHead>Platforms</DataTableHead>
-            <DataTableHead>Status</DataTableHead>
-            <DataTableHead>Created</DataTableHead>
-            <DataTableHead className="text-right">Actions</DataTableHead>
+            <DataTableHead>产品</DataTableHead>
+            <DataTableHead>版本</DataTableHead>
+            <DataTableHead>渠道</DataTableHead>
+            <DataTableHead>平台</DataTableHead>
+            <DataTableHead>状态</DataTableHead>
+            <DataTableHead>创建时间</DataTableHead>
+            <DataTableHead className="text-right">操作</DataTableHead>
           </DataTableRow>
         </DataTableHeader>
         <DataTableBody>
           {isLoading ? (
-            <DataTableEmpty colSpan={7} message="Loading..." />
+            <DataTableEmpty colSpan={7} message="加载中..." />
           ) : releases.length === 0 ? (
-            <DataTableEmpty colSpan={7} message='No releases yet. Click "New release" to start.' />
+            <DataTableEmpty colSpan={7} message="暂无发布版本，点击“新建版本”开始。" />
           ) : (
             releases.map((rel) => {
               const bucketKey = `${rel.product_id}|${rel.channel}`
@@ -261,7 +259,7 @@ export default function ReleasesPage() {
                       type="button"
                       className="hover:underline"
                       onClick={() => setOpenRelease(rel)}
-                      title="Open release detail"
+                      title="打开版本详情"
                     >
                       {rel.version}
                     </button>
@@ -269,24 +267,22 @@ export default function ReleasesPage() {
                       <Badge
                         variant="outline"
                         className="ml-1.5 text-[10px] py-0 px-1.5 border-amber-500 text-amber-700"
-                        title={`Below current latest (${latestInBucket})`}
+                        title={`低于当前最新版本（${latestInBucket}）`}
                       >
-                        below latest
+                        低于最新版
                       </Badge>
                     )}
                   </DataTableCell>
                   <DataTableCell>
                     <Badge variant="outline" className="capitalize">
-                      {rel.channel}
+                      {CHANNEL_LABELS[rel.channel] || rel.channel}
                     </Badge>
                   </DataTableCell>
                   <DataTableCell className="text-sm">
                     {artifacts.length === 0 ? (
                       <span className="text-muted-foreground">—</span>
                     ) : (
-                      <span className="font-mono text-xs">
-                        {artifacts.length} platform{artifacts.length === 1 ? "" : "s"}
-                      </span>
+                      <span className="font-mono text-xs">{artifacts.length} 个平台</span>
                     )}
                   </DataTableCell>
                   <DataTableCell>
@@ -297,12 +293,12 @@ export default function ReleasesPage() {
                     <DropdownMenu>
                       <DropdownMenuTrigger asChild>
                         <Button variant="ghost" size="sm">
-                          Actions
+                          操作
                         </Button>
                       </DropdownMenuTrigger>
                       <DropdownMenuContent align="end">
                         <DropdownMenuItem onClick={() => setOpenRelease(rel)}>
-                          <ChevronRight className="h-3.5 w-3.5 mr-2" /> View / manage artifacts
+                          <ChevronRight className="h-3.5 w-3.5 mr-2" /> 查看或管理安装包
                         </DropdownMenuItem>
                         <DropdownMenuSeparator />
                         {rel.status === "draft" && allReady && (
@@ -315,30 +311,30 @@ export default function ReleasesPage() {
                               }
                             }}
                           >
-                            <Rocket className="h-3.5 w-3.5 mr-2" /> Publish
+                            <Rocket className="h-3.5 w-3.5 mr-2" /> 发布
                           </DropdownMenuItem>
                         )}
                         {rel.status === "draft" && !allReady && (
                           <DropdownMenuItem disabled>
-                            Awaiting artifacts ({artifacts.filter((a) => a.sha256).length}/{artifacts.length} ready)
+                            等待安装包（{artifacts.filter((a) => a.sha256).length}/{artifacts.length} 已就绪）
                           </DropdownMenuItem>
                         )}
                         {rel.status === "published" && (
                           <DropdownMenuItem onClick={() => setYanking(rel)} className="text-destructive">
-                            <AlertTriangle className="h-3.5 w-3.5 mr-2" /> Yank
+                            <AlertTriangle className="h-3.5 w-3.5 mr-2" /> 撤回
                           </DropdownMenuItem>
                         )}
                         {rel.status === "yanked" && (
-                          <DropdownMenuItem onClick={() => setUnyanking(rel)}>Unyank</DropdownMenuItem>
+                          <DropdownMenuItem onClick={() => setUnyanking(rel)}>恢复发布</DropdownMenuItem>
                         )}
                         <DropdownMenuSeparator />
                         {rel.status === "draft" ? (
                           <DropdownMenuItem className="text-destructive" onClick={() => setDeleting(rel)}>
-                            <Trash2 className="h-3.5 w-3.5 mr-2" /> Delete draft
+                            <Trash2 className="h-3.5 w-3.5 mr-2" /> 删除草稿
                           </DropdownMenuItem>
                         ) : (
                           <DropdownMenuItem disabled>
-                            <Trash2 className="h-3.5 w-3.5 mr-2" /> Delete (yank instead)
+                            <Trash2 className="h-3.5 w-3.5 mr-2" /> 不可删除（请改为撤回）
                           </DropdownMenuItem>
                         )}
                       </DropdownMenuContent>
@@ -375,15 +371,16 @@ export default function ReleasesPage() {
         <AlertDialog open onOpenChange={() => setUnyanking(null)}>
           <AlertDialogContent>
             <AlertDialogHeader>
-              <AlertDialogTitle>Unyank v{unyanking.version}?</AlertDialogTitle>
+              <AlertDialogTitle>恢复发布 v{unyanking.version}？</AlertDialogTitle>
               <AlertDialogDescription>
-                This restores the release to the public update feed. SDK clients on the affected channel will start
-                receiving v{unyanking.version} as a valid update again.
+                此操作会将该版本恢复到公开更新源，对应渠道的客户端将再次收到 v{unyanking.version} 更新。
               </AlertDialogDescription>
             </AlertDialogHeader>
             <div className="flex justify-end gap-2">
-              <AlertDialogCancel>Cancel</AlertDialogCancel>
-              <AlertDialogAction onClick={() => unyanking && unyankMut.mutate(unyanking.id)}>Unyank</AlertDialogAction>
+              <AlertDialogCancel>取消</AlertDialogCancel>
+              <AlertDialogAction onClick={() => unyanking && unyankMut.mutate(unyanking.id)}>
+                恢复发布
+              </AlertDialogAction>
             </div>
           </AlertDialogContent>
         </AlertDialog>
@@ -393,16 +390,15 @@ export default function ReleasesPage() {
         <AlertDialog open onOpenChange={() => setDeleting(null)}>
           <AlertDialogContent>
             <AlertDialogHeader>
-              <AlertDialogTitle>Delete draft release?</AlertDialogTitle>
+              <AlertDialogTitle>删除草稿版本？</AlertDialogTitle>
               <AlertDialogDescription>
-                Permanently removes the draft and its uploaded artifacts. Published or yanked releases cannot be
-                deleted.
+                此操作会永久删除草稿及其已上传的安装包。已发布或已撤回的版本不能删除。
               </AlertDialogDescription>
             </AlertDialogHeader>
             <div className="flex justify-end gap-2 pt-2">
-              <AlertDialogCancel>Cancel</AlertDialogCancel>
+              <AlertDialogCancel>取消</AlertDialogCancel>
               <AlertDialogAction onClick={() => deleteMut.mutate(deleting.id)} disabled={deleteMut.isPending}>
-                Delete
+                删除
               </AlertDialogAction>
             </div>
           </AlertDialogContent>
@@ -412,23 +408,22 @@ export default function ReleasesPage() {
         <AlertDialog open onOpenChange={() => setConfirmPublish(null)}>
           <AlertDialogContent>
             <AlertDialogHeader>
-              <AlertDialogTitle>Publish a version below current latest?</AlertDialogTitle>
+              <AlertDialogTitle>发布低于当前最新版的版本？</AlertDialogTitle>
               <AlertDialogDescription>
-                Publishing <strong>{confirmPublish.rel.version}</strong>, older than{" "}
-                <strong>{confirmPublish.latest}</strong>. Velopack and Tauri reject downgrades by default; Sparkle's
-                standard comparator is not SemVer-aware. This release will appear in your history out of order —
-                appropriate for backports.
+                即将发布的 <strong>{confirmPublish.rel.version}</strong> 低于当前版本{" "}
+                <strong>{confirmPublish.latest}</strong>。Velopack 和 Tauri
+                默认拒绝降级；该版本会以非顺序方式出现在历史记录中，适合回移修复场景。
               </AlertDialogDescription>
             </AlertDialogHeader>
             <div className="flex justify-end gap-2 pt-2">
-              <AlertDialogCancel>Cancel</AlertDialogCancel>
+              <AlertDialogCancel>取消</AlertDialogCancel>
               <AlertDialogAction
                 onClick={() => {
                   publishMut.mutate(confirmPublish.rel.id)
                   setConfirmPublish(null)
                 }}
               >
-                Publish anyway
+                仍然发布
               </AlertDialogAction>
             </div>
           </AlertDialogContent>
@@ -448,7 +443,7 @@ function StatusBadge({ status, yankedReason }: { status: string; yankedReason?: 
   return (
     <Badge className={cls} title={yankedReason}>
       {status === "yanked" && <AlertTriangle className="h-3 w-3 mr-1" />}
-      {status}
+      {STATUS_LABELS[status] || status}
     </Badge>
   )
 }
@@ -483,7 +478,7 @@ function CreateReleaseDialog({
       }),
     onSuccess: (rel) => {
       qc.invalidateQueries({ queryKey: ["admin", "releases"] })
-      showToast(`Draft ${rel.version} created. Add artifacts to publish.`, "success")
+      showToast(`草稿 ${rel.version} 已创建，请添加安装包后发布。`, "success")
       onCreated(rel)
     },
     onError: (e: Error) => setError(e.message),
@@ -493,14 +488,12 @@ function CreateReleaseDialog({
     <Dialog open onOpenChange={onClose}>
       <DialogContent className="max-w-lg">
         <DialogHeader>
-          <DialogTitle>New release</DialogTitle>
-          <DialogDescription>
-            Create the release record. You'll add platform-specific binaries (artifacts) in the next step.
-          </DialogDescription>
+          <DialogTitle>新建版本</DialogTitle>
+          <DialogDescription>先创建版本记录，下一步再添加各平台对应的安装包。</DialogDescription>
         </DialogHeader>
         <div className="space-y-4 py-2">
           <div className="space-y-2">
-            <Label>Product</Label>
+            <Label>产品</Label>
             <Select value={productId} onValueChange={setProductId}>
               <SelectTrigger>
                 <SelectValue />
@@ -516,11 +509,11 @@ function CreateReleaseDialog({
           </div>
           <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
             <div className="space-y-2">
-              <Label>Version</Label>
+              <Label>版本号</Label>
               <Input placeholder="1.2.3" value={version} onChange={(e) => setVersion(e.target.value)} />
             </div>
             <div className="space-y-2">
-              <Label>Channel</Label>
+              <Label>发布渠道</Label>
               <Select value={channel} onValueChange={(v) => setChannel(v as typeof channel)}>
                 <SelectTrigger>
                   <SelectValue />
@@ -528,7 +521,7 @@ function CreateReleaseDialog({
                 <SelectContent>
                   {RELEASE_CHANNELS.map((c) => (
                     <SelectItem key={c} value={c}>
-                      {c}
+                      {CHANNEL_LABELS[c] || c}
                     </SelectItem>
                   ))}
                 </SelectContent>
@@ -536,14 +529,14 @@ function CreateReleaseDialog({
             </div>
           </div>
           <div className="space-y-2">
-            <Label>Display name (optional)</Label>
-            <Input placeholder="MyApp Pro" value={name} onChange={(e) => setName(e.target.value)} />
+            <Label>显示名称（可选）</Label>
+            <Input placeholder="示例产品专业版" value={name} onChange={(e) => setName(e.target.value)} />
           </div>
           <div className="space-y-2">
-            <Label>Release notes (optional, markdown)</Label>
+            <Label>更新说明（可选，支持 Markdown）</Label>
             <Textarea
               rows={4}
-              placeholder="What's new in this version..."
+              placeholder="请输入此版本的更新内容..."
               value={releaseNotes}
               onChange={(e) => setReleaseNotes(e.target.value)}
               className="flex min-h-[60px] w-full rounded-md border border-input bg-background px-3 py-2 text-sm placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
@@ -553,10 +546,10 @@ function CreateReleaseDialog({
         </div>
         <div className="flex justify-end gap-2 pt-2">
           <Button variant="outline" onClick={onClose}>
-            Cancel
+            取消
           </Button>
           <Button onClick={() => mut.mutate()} disabled={!productId || !version || mut.isPending}>
-            {mut.isPending ? "Creating..." : "Create draft"}
+            {mut.isPending ? "创建中..." : "创建草稿"}
           </Button>
         </div>
       </DialogContent>
@@ -597,25 +590,25 @@ function ReleaseDetailDialog({ release, onClose }: { release: Release; onClose: 
           <DialogTitle>
             {rel.product?.name || rel.product_id} {rel.version}
             <Badge variant="outline" className="ml-2 capitalize text-xs">
-              {rel.channel}
+              {CHANNEL_LABELS[rel.channel] || rel.channel}
             </Badge>
             <StatusBadge status={rel.status} />
           </DialogTitle>
           <DialogDescription>
             {rel.status === "draft" ? (
-              <>Add platform binaries below. Publish when ready.</>
+              <>请添加各平台安装包，全部准备完成后即可发布。</>
             ) : (
-              <>This release is {rel.status}. Artifacts cannot be modified.</>
+              <>该版本状态为“{STATUS_LABELS[rel.status] || rel.status}”，安装包不可修改。</>
             )}
           </DialogDescription>
         </DialogHeader>
 
         <div className="space-y-4 py-2">
           <div>
-            <p className="text-sm font-medium mb-2">Artifacts ({artifacts.length})</p>
+            <p className="text-sm font-medium mb-2">安装包（{artifacts.length}）</p>
             {artifacts.length === 0 ? (
               <p className="text-xs text-muted-foreground py-4 text-center bg-muted/50 rounded">
-                No artifacts yet — add at least one platform before publishing.
+                暂无安装包，发布前至少需要添加一个平台。
               </p>
             ) : (
               <div className="space-y-2">
@@ -633,7 +626,7 @@ function ReleaseDetailDialog({ release, onClose }: { release: Release; onClose: 
 
           {rel.status === "draft" && remainingPlatforms.length > 0 && (
             <Button onClick={() => setAdding(true)} variant="outline" className="w-full">
-              <Plus className="h-4 w-4 mr-2" /> Add artifact ({remainingPlatforms.length} platforms remaining)
+              <Plus className="h-4 w-4 mr-2" /> 添加安装包（剩余 {remainingPlatforms.length} 个平台）
             </Button>
           )}
         </div>
@@ -666,22 +659,22 @@ function ArtifactRow({
 }) {
   const ready = !!artifact.sha256
   return (
-    <div className="flex items-center gap-3 bg-muted/50 rounded px-3 py-2 text-sm">
+    <div className="flex flex-wrap items-center gap-2 rounded-lg bg-muted/50 px-3 py-2 text-sm sm:flex-nowrap sm:gap-3">
       <Badge variant="outline" className="font-mono text-[10px]">
         {artifact.platform}
       </Badge>
-      <span className="text-muted-foreground text-xs flex-1 truncate">
-        {ready ? `${formatBytes(artifact.file_size)} · sha256:${artifact.sha256.slice(0, 12)}…` : "Not uploaded yet"}
+      <span className="min-w-28 flex-1 truncate text-xs text-muted-foreground">
+        {ready ? `${formatBytes(artifact.file_size)} · sha256:${artifact.sha256.slice(0, 12)}…` : "尚未上传"}
       </span>
       {ready && artifact.ed25519_sig && (
         <Badge variant="outline" className="text-[10px]" title={artifact.signing_key_id}>
-          signed
+          已签名
         </Badge>
       )}
       {ready ? (
-        <Badge className="bg-emerald-100 text-emerald-800 text-[10px]">ready</Badge>
+        <Badge className="bg-emerald-100 text-emerald-800 text-[10px]">已就绪</Badge>
       ) : (
-        <Badge className="bg-amber-100 text-amber-800 text-[10px]">pending</Badge>
+        <Badge className="bg-amber-100 text-amber-800 text-[10px]">等待中</Badge>
       )}
       {canEdit && (
         <Button variant="ghost" size="icon" className="h-7 w-7 text-destructive" onClick={onDelete}>
@@ -726,7 +719,7 @@ function AddArtifactDialog({
   const handleSubmit = async () => {
     setError("")
     if (!platform || !file) {
-      setError("Platform and file are required")
+      setError("请选择平台和安装包文件")
       return
     }
     try {
@@ -745,7 +738,7 @@ function AddArtifactDialog({
         headers: { "Content-Type": file.type || "application/octet-stream" },
       })
       if (!putResp.ok) {
-        throw new Error(`Upload failed: ${putResp.status} ${putResp.statusText}`)
+        throw new Error(`上传失败：${putResp.status} ${putResp.statusText}`)
       }
 
       setProgress("finalizing")
@@ -755,7 +748,7 @@ function AddArtifactDialog({
       const expected_sha256 = file.size <= CLIENT_HASH_MAX_BYTES ? await sha256Hex(file) : undefined
       await admin.finalizeArtifact(release.id, init.artifact.id, { expected_sha256 })
 
-      showToast(`Artifact for ${platform} uploaded`, "success")
+      showToast(`${platform} 平台安装包已上传`, "success")
       onAdded()
     } catch (e) {
       const msg = e instanceof Error ? e.message : String(e)
@@ -773,15 +766,14 @@ function AddArtifactDialog({
     <Dialog open onOpenChange={busy ? undefined : onClose}>
       <DialogContent>
         <DialogHeader>
-          <DialogTitle>Add artifact</DialogTitle>
+          <DialogTitle>添加安装包</DialogTitle>
           <DialogDescription>
-            Upload a platform binary for {release.version}. The file goes directly to storage; we sign + finalize on
-            publish.
+            为 {release.version} 上传平台安装包。文件将直接上传至存储，并在发布时完成签名。
           </DialogDescription>
         </DialogHeader>
         <div className="space-y-4 py-2">
           <div className="space-y-2">
-            <Label>Platform</Label>
+            <Label>平台</Label>
             <Select value={platform} onValueChange={setPlatform} disabled={busy}>
               <SelectTrigger>
                 <SelectValue />
@@ -796,7 +788,7 @@ function AddArtifactDialog({
             </Select>
           </div>
           <div className="space-y-2">
-            <Label>Artifact file</Label>
+            <Label>安装包文件</Label>
             <Input ref={fileInputRef} type="file" onChange={onFileChange} disabled={busy} />
             {file && (
               <p className="text-xs text-muted-foreground">
@@ -807,19 +799,19 @@ function AddArtifactDialog({
           {error && <p className="text-sm text-destructive">{error}</p>}
           {busy && (
             <div className="text-sm space-y-1 bg-muted rounded-md p-3">
-              {progress === "init" && "Reserving artifact slot..."}
-              {progress === "uploading" && "Uploading to storage..."}
-              {progress === "finalizing" && "Computing SHA-256 + finalizing..."}
+              {progress === "init" && "正在创建上传任务..."}
+              {progress === "uploading" && "正在上传到存储..."}
+              {progress === "finalizing" && "正在计算 SHA-256 并完成处理..."}
             </div>
           )}
         </div>
         <div className="flex justify-end gap-2 pt-2">
           <Button variant="outline" onClick={onClose} disabled={busy}>
-            Cancel
+            取消
           </Button>
           <Button onClick={handleSubmit} disabled={busy || !file || !platform}>
             <Upload className="h-4 w-4 mr-2" />
-            {busy ? "Working..." : "Upload"}
+            {busy ? "处理中..." : "上传"}
           </Button>
         </div>
       </DialogContent>
@@ -834,7 +826,7 @@ function YankDialog({ release, onClose }: { release: Release; onClose: () => voi
     mutationFn: (r: string) => admin.yankRelease(release.id, r),
     onSuccess: () => {
       qc.invalidateQueries({ queryKey: ["admin", "releases"] })
-      showToast("Release yanked", "success")
+      showToast("版本已撤回", "success")
       onClose()
     },
     onError: (e: Error) => showToast(e.message, "error"),
@@ -844,17 +836,16 @@ function YankDialog({ release, onClose }: { release: Release; onClose: () => voi
     <Dialog open onOpenChange={onClose}>
       <DialogContent>
         <DialogHeader>
-          <DialogTitle>Yank {release.version}?</DialogTitle>
+          <DialogTitle>撤回 {release.version}？</DialogTitle>
           <DialogDescription>
-            Yanking removes this release (and ALL its artifacts) from update feeds. Existing installs continue working.
-            Provide a reason — recorded in the audit log.
+            撤回后，该版本及其全部安装包将从更新源移除，已有安装不受影响。撤回原因会记录到审计日志。
           </DialogDescription>
         </DialogHeader>
         <div className="space-y-2 py-2">
-          <Label>Reason</Label>
+          <Label>撤回原因</Label>
           <Textarea
             rows={3}
-            placeholder="Critical bug in v1.2.3 affecting Windows users; rollback recommended."
+            placeholder="例如：此版本存在影响 Windows 用户的严重问题，建议回退。"
             value={reason}
             onChange={(e) => setReason(e.target.value)}
             className="flex min-h-[60px] w-full rounded-md border border-input bg-background px-3 py-2 text-sm placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
@@ -862,14 +853,14 @@ function YankDialog({ release, onClose }: { release: Release; onClose: () => voi
         </div>
         <div className="flex justify-end gap-2 pt-2">
           <Button variant="outline" onClick={onClose}>
-            Cancel
+            取消
           </Button>
           <Button
             variant="destructive"
             onClick={() => yankMut.mutate(reason)}
             disabled={!reason.trim() || yankMut.isPending}
           >
-            Yank
+            确认撤回
           </Button>
         </div>
       </DialogContent>
@@ -994,14 +985,13 @@ function SigningKeysDialog({ products, onClose }: { products: { id: string; name
     <Dialog open onOpenChange={onClose}>
       <DialogContent className="max-w-2xl max-h-[85vh] overflow-y-auto">
         <DialogHeader>
-          <DialogTitle>Release signing keys</DialogTitle>
+          <DialogTitle>发布签名密钥</DialogTitle>
           <DialogDescription>
-            Generate an Ed25519 keypair per product. The public key is embedded in your client app; the server signs
-            every release artifact with the private key on publish.
+            为每个产品生成独立的 Ed25519 密钥对。公钥嵌入客户端，服务端在发布时使用私钥签名每个安装包。
           </DialogDescription>
         </DialogHeader>
         <div className="space-y-2 py-2">
-          <Label>Product</Label>
+          <Label>产品</Label>
           <Select value={productId} onValueChange={setProductId}>
             <SelectTrigger>
               <SelectValue />
@@ -1038,7 +1028,7 @@ function SigningKeysSection({ productId }: { productId: string }) {
     mutationFn: () => admin.generateSigningKey(productId),
     onSuccess: () => {
       qc.invalidateQueries({ queryKey: ["admin", "signing-keys", productId] })
-      showToast("Signing key generated", "success")
+      showToast("签名密钥已生成", "success")
     },
     onError: (e: Error) => showToast(e.message, "error"),
   })
@@ -1051,14 +1041,13 @@ function SigningKeysSection({ productId }: { productId: string }) {
         <Card>
           <CardContent className="py-8 text-center">
             <KeyRound className="h-10 w-10 mx-auto text-muted-foreground mb-3" />
-            <p className="font-medium">No active signing key</p>
+            <p className="font-medium">没有可用的签名密钥</p>
             <p className="text-sm text-muted-foreground mb-4">
-              Publishing is blocked until you generate a key (or turn off require_signing on the product to ship
-              unsigned releases).
+              生成密钥前无法发布。也可以关闭产品的强制签名设置，以发布未签名版本。
             </p>
             <Button onClick={() => generateMut.mutate()} disabled={generateMut.isPending}>
               <Plus className="h-4 w-4 mr-2" />
-              {generateMut.isPending ? "Generating..." : "Generate signing key"}
+              {generateMut.isPending ? "生成中..." : "生成签名密钥"}
             </Button>
           </CardContent>
         </Card>
@@ -1073,14 +1062,14 @@ function SigningKeysSection({ productId }: { productId: string }) {
 
       {history.length > 0 && (
         <div>
-          <p className="text-sm font-medium mb-2">Past keys ({history.length})</p>
+          <p className="text-sm font-medium mb-2">历史密钥（{history.length}）</p>
           <div className="space-y-2">
             {history.map((k) => (
               <div key={k.id} className="bg-muted/50 rounded-md px-3 py-2 text-xs">
                 <div className="flex flex-col gap-1 sm:flex-row sm:items-center sm:justify-between">
                   <code className="min-w-0 flex-1 truncate sm:mr-2">{k.public_key}</code>
                   <span className="text-muted-foreground shrink-0">
-                    rotated {k.rotated_at ? formatDate(k.rotated_at) : "—"}
+                    轮换于 {k.rotated_at ? formatDate(k.rotated_at) : "—"}
                   </span>
                 </div>
                 {k.note && <p className="text-muted-foreground mt-1">{k.note}</p>}
@@ -1121,13 +1110,13 @@ function ActiveSigningKeyCard({
       <CardContent className="py-4 space-y-3">
         <div className="flex flex-wrap items-center justify-between gap-3">
           <div className="min-w-0">
-            <p className="font-medium text-sm">Active signing key</p>
-            <p className="text-xs text-muted-foreground">Created {formatDate(keyRow.created_at)}</p>
+            <p className="font-medium text-sm">当前签名密钥</p>
+            <p className="text-xs text-muted-foreground">创建于 {formatDate(keyRow.created_at)}</p>
           </div>
-          <Badge className="bg-emerald-100 text-emerald-800">Active</Badge>
+          <Badge className="bg-emerald-100 text-emerald-800">使用中</Badge>
         </div>
         <div>
-          <Label className="text-xs">Public key (Ed25519, base64)</Label>
+          <Label className="text-xs">公钥（Ed25519，Base64）</Label>
           <div className="flex items-center gap-2 mt-1 bg-muted rounded-md px-3 py-2">
             <code className="text-xs flex-1 truncate font-mono">{keyRow.public_key}</code>
             <Button variant="ghost" size="icon" className="h-7 w-7 shrink-0" onClick={copy}>
@@ -1135,24 +1124,24 @@ function ActiveSigningKeyCard({
             </Button>
           </div>
           <p className="text-xs text-muted-foreground mt-1">
-            Embed this in your client app's update verifier (Sparkle <code>SUPublicEDKey</code> in Info.plist, or Tauri{" "}
-            <code>pubkey</code>).
+            请将此公钥嵌入客户端更新验证器，例如 Sparkle 的 Info.plist <code>SUPublicEDKey</code> 或 Tauri 的{" "}
+            <code>pubkey</code>。
           </p>
         </div>
         <div className="flex flex-wrap gap-2">
           <Button variant="outline" size="sm" asChild>
             <a href={admin.publicKeyURL(productId)} download="public_key.pem">
               <Download className="h-3.5 w-3.5 mr-1.5" />
-              Download .pem
+              下载 .pem
             </a>
           </Button>
           <Button variant="outline" size="sm" onClick={onRotate}>
             <RotateCw className="h-3.5 w-3.5 mr-1.5" />
-            Rotate
+            轮换密钥
           </Button>
           <Button variant="outline" size="sm" className="text-destructive" onClick={onDeactivate}>
             <Trash2 className="h-3.5 w-3.5 mr-1.5" />
-            Deactivate
+            停用
           </Button>
         </div>
       </CardContent>
@@ -1167,7 +1156,7 @@ function RotateKeyDialog({ productId, onClose }: { productId: string; onClose: (
     mutationFn: (n: string) => admin.rotateSigningKey(productId, n),
     onSuccess: () => {
       qc.invalidateQueries({ queryKey: ["admin", "signing-keys", productId] })
-      showToast("Signing key rotated", "success")
+      showToast("签名密钥已轮换", "success")
       onClose()
     },
     onError: (e: Error) => showToast(e.message, "error"),
@@ -1177,17 +1166,16 @@ function RotateKeyDialog({ productId, onClose }: { productId: string; onClose: (
     <Dialog open onOpenChange={onClose}>
       <DialogContent>
         <DialogHeader>
-          <DialogTitle>Rotate signing key?</DialogTitle>
+          <DialogTitle>轮换签名密钥？</DialogTitle>
           <DialogDescription>
-            New keypair generated. Old key is preserved in history but inactive. Existing installs with only the old
-            public key embedded will fail to verify new releases.
+            系统会生成新密钥对，旧密钥保留在历史记录中但不再使用。仅内置旧公钥的客户端将无法验证新版本。
           </DialogDescription>
         </DialogHeader>
         <div className="space-y-2 py-2">
-          <Label>Reason (audit log)</Label>
+          <Label>原因（写入审计日志）</Label>
           <Textarea
             rows={3}
-            placeholder="Routine rotation; no key compromise."
+            placeholder="例如：例行轮换，密钥未泄露。"
             value={note}
             onChange={(e) => setNote(e.target.value)}
             className="flex min-h-[60px] w-full rounded-md border border-input bg-background px-3 py-2 text-sm"
@@ -1195,10 +1183,10 @@ function RotateKeyDialog({ productId, onClose }: { productId: string; onClose: (
         </div>
         <div className="flex justify-end gap-2 pt-2">
           <Button variant="outline" onClick={onClose}>
-            Cancel
+            取消
           </Button>
           <Button onClick={() => mut.mutate(note)} disabled={mut.isPending}>
-            {mut.isPending ? "Rotating..." : "Rotate"}
+            {mut.isPending ? "轮换中..." : "确认轮换"}
           </Button>
         </div>
       </DialogContent>
@@ -1213,7 +1201,7 @@ function DeactivateKeyDialog({ productId, onClose }: { productId: string; onClos
     mutationFn: (n: string) => admin.deactivateSigningKey(productId, n),
     onSuccess: () => {
       qc.invalidateQueries({ queryKey: ["admin", "signing-keys", productId] })
-      showToast("Signing key deactivated", "success")
+      showToast("签名密钥已停用", "success")
       onClose()
     },
     onError: (e: Error) => showToast(e.message, "error"),
@@ -1223,18 +1211,16 @@ function DeactivateKeyDialog({ productId, onClose }: { productId: string; onClos
     <Dialog open onOpenChange={onClose}>
       <DialogContent>
         <DialogHeader>
-          <DialogTitle>Deactivate signing key?</DialogTitle>
+          <DialogTitle>停用签名密钥？</DialogTitle>
           <DialogDescription>
-            Already-published releases keep their signatures. New releases cannot be published until you generate a new
-            key, unless require_signing is off for the product — then they ship unsigned and clients with strict
-            signature checking will reject them.
+            已发布版本的签名不受影响。停用后需要生成新密钥才能继续发布；如果产品关闭强制签名，新版本将不带签名，启用严格校验的客户端会拒绝该版本。
           </DialogDescription>
         </DialogHeader>
         <div className="space-y-2 py-2">
-          <Label>Reason (audit log)</Label>
+          <Label>原因（写入审计日志）</Label>
           <Textarea
             rows={3}
-            placeholder="Why are you deactivating?"
+            placeholder="请输入停用原因"
             value={note}
             onChange={(e) => setNote(e.target.value)}
             className="flex min-h-[60px] w-full rounded-md border border-input bg-background px-3 py-2 text-sm"
@@ -1242,10 +1228,10 @@ function DeactivateKeyDialog({ productId, onClose }: { productId: string; onClos
         </div>
         <div className="flex justify-end gap-2 pt-2">
           <Button variant="outline" onClick={onClose}>
-            Cancel
+            取消
           </Button>
           <Button variant="destructive" onClick={() => mut.mutate(note)} disabled={mut.isPending}>
-            {mut.isPending ? "Deactivating..." : "Deactivate"}
+            {mut.isPending ? "停用中..." : "确认停用"}
           </Button>
         </div>
       </DialogContent>

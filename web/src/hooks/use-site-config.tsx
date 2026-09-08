@@ -25,6 +25,36 @@ const defaults: SiteConfig = {
 
 const SiteConfigContext = createContext<SiteConfig>(defaults)
 
+const THEME_PROPERTIES = [
+  "--primary",
+  "--primary-foreground",
+  "--ring",
+  "--accent",
+  "--accent-foreground",
+  "--sidebar-accent",
+] as const
+
+export function applyBrandColor(color: string) {
+  const root = document.documentElement
+  if (!color) {
+    for (const property of THEME_PROPERTIES) root.style.removeProperty(property)
+    return
+  }
+  root.style.setProperty("--primary", color)
+  const hex = /^#([\da-f]{2})([\da-f]{2})([\da-f]{2})$/i.exec(color)
+  if (hex) {
+    const [r, g, b] = hex.slice(1).map((value) => Number.parseInt(value, 16) / 255)
+    const luminance = 0.2126 * r + 0.7152 * g + 0.0722 * b
+    root.style.setProperty("--primary-foreground", luminance > 0.62 ? "#111827" : "#ffffff")
+  } else {
+    root.style.removeProperty("--primary-foreground")
+  }
+  root.style.setProperty("--ring", color)
+  root.style.setProperty("--accent", `color-mix(in oklab, ${color} 12%, var(--background))`)
+  root.style.setProperty("--accent-foreground", color)
+  root.style.setProperty("--sidebar-accent", `color-mix(in oklab, ${color} 12%, var(--sidebar))`)
+}
+
 export function SiteConfigProvider({ children }: { children: ReactNode }) {
   const [config, setConfig] = useState<SiteConfig>(defaults)
 
@@ -52,9 +82,7 @@ export function SiteConfigProvider({ children }: { children: ReactNode }) {
             link.href = data.logo_url
           })
         }
-        if (data.brand_color) {
-          document.documentElement.style.setProperty("--color-primary", data.brand_color)
-        }
+        applyBrandColor(data.brand_color || "")
         if (data.site_name) {
           document.title = data.site_name
         }

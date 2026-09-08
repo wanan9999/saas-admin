@@ -149,7 +149,7 @@ func (s *EmailService) Send(to, subject, htmlBody string) error {
 // genuinely want plaintext auth can run their own postfix in front.
 func (s *EmailService) sendOnce(addr, to string, msg []byte) error {
 	// The SMTP envelope sender (MAIL FROM, RFC 5321) must be a BARE
-// address — "noreply@x.com", never "Example <noreply@x.com>".
+	// address — "noreply@x.com", never "Example <noreply@x.com>".
 	// The display-name form is only legal in the RFC 5322 "From:"
 	// header (which Send() builds separately). Strict MTAs like
 	// Postmark reject a display-name envelope with
@@ -345,8 +345,8 @@ func (s *EmailService) SendLicenseCreated(to, productName, planName, licenseKey 
 		"LicenseKey": licenseKey,
 	})
 	go func() {
-		if err := s.Send(to, "Your license for "+productName, body); err != nil {
-			s.logger.Error("email delivery failed", "to", to, "subject", "Your license for "+productName, "error", err)
+		if err := s.Send(to, productName+" 许可证已创建", body); err != nil {
+			s.logger.Error("email delivery failed", "to", to, "subject", productName+" 许可证已创建", "error", err)
 		}
 	}()
 }
@@ -358,8 +358,8 @@ func (s *EmailService) SendLicenseExpiring(to, productName, licenseKey, expiresA
 		"ExpiresAt":  expiresAt,
 	})
 	go func() {
-		if err := s.Send(to, productName+" license expiring soon", body); err != nil {
-			s.logger.Error("email delivery failed", "to", to, "subject", productName+" license expiring soon", "error", err)
+		if err := s.Send(to, productName+" 许可证即将到期", body); err != nil {
+			s.logger.Error("email delivery failed", "to", to, "subject", productName+" 许可证即将到期", "error", err)
 		}
 	}()
 }
@@ -372,7 +372,7 @@ func (s *EmailService) SendQuotaWarning(to, productName, feature string, used, l
 		"Limit":   limit,
 		"Pct":     pct,
 	})
-	subject := fmt.Sprintf("%s: %s quota at %d%%", productName, feature, pct)
+	subject := fmt.Sprintf("%s 配额预警：%s 已使用 %d%%", productName, feature, pct)
 	go func() {
 		if err := s.Send(to, subject, body); err != nil {
 			s.logger.Error("email delivery failed", "to", to, "subject", subject, "error", err)
@@ -397,11 +397,11 @@ func (s *EmailService) SendSeatInvite(to, productName, inviterName, acceptURL st
 	// contain the claim URL (custom template missed the placeholder),
 	// append it so the recipient still has a way in.
 	if acceptURL != "" && !strings.Contains(body, acceptURL) {
-		body += `<p style="margin-top:24px;font-size:13px;color:#555;">Accept the invitation: <a href="` + acceptURL + `">` + acceptURL + `</a></p>`
+		body += `<p style="margin-top:24px;font-size:13px;color:#555;">接受邀请：<a href="` + acceptURL + `">` + acceptURL + `</a></p>`
 	}
 	go func() {
-		if err := s.Send(to, "You've been invited to "+productName, body); err != nil {
-			s.logger.Error("email delivery failed", "to", to, "subject", "You've been invited to "+productName, "error", err)
+		if err := s.Send(to, "您收到了一份 "+productName+" 成员邀请", body); err != nil {
+			s.logger.Error("email delivery failed", "to", to, "subject", "您收到了一份 "+productName+" 成员邀请", "error", err)
 		}
 	}()
 }
@@ -411,8 +411,8 @@ func (s *EmailService) SendLicenseExpired(to, productName string) {
 		"Product": productName,
 	})
 	go func() {
-		if err := s.Send(to, productName+" license expired", body); err != nil {
-			s.logger.Error("email delivery failed", "to", to, "subject", productName+" license expired", "error", err)
+		if err := s.Send(to, productName+" 许可证已到期", body); err != nil {
+			s.logger.Error("email delivery failed", "to", to, "subject", productName+" 许可证已到期", "error", err)
 		}
 	}()
 }
@@ -422,8 +422,8 @@ func (s *EmailService) SendTrialExpired(to, productName string) {
 		"Product": productName,
 	})
 	go func() {
-		if err := s.Send(to, productName+" trial has ended", body); err != nil {
-			s.logger.Error("email delivery failed", "to", to, "subject", productName+" trial has ended", "error", err)
+		if err := s.Send(to, productName+" 试用期已结束", body); err != nil {
+			s.logger.Error("email delivery failed", "to", to, "subject", productName+" 试用期已结束", "error", err)
 		}
 	}()
 }
@@ -434,8 +434,8 @@ func (s *EmailService) SendLicenseSuspended(to, productName, reason string) {
 		"Reason":  reason,
 	})
 	go func() {
-		if err := s.Send(to, productName+" license suspended", body); err != nil {
-			s.logger.Error("email delivery failed", "to", to, "subject", productName+" license suspended", "error", err)
+		if err := s.Send(to, productName+" 许可证已暂停", body); err != nil {
+			s.logger.Error("email delivery failed", "to", to, "subject", productName+" 许可证已暂停", "error", err)
 		}
 	}()
 }
@@ -469,8 +469,8 @@ func (s *EmailService) SendPaymentFailed(to, productName string) {
 		"Product": productName,
 	})
 	go func() {
-		if err := s.Send(to, productName+" payment failed", body); err != nil {
-			s.logger.Error("email delivery failed", "to", to, "subject", productName+" payment failed", "error", err)
+		if err := s.Send(to, productName+" 付款失败", body); err != nil {
+			s.logger.Error("email delivery failed", "to", to, "subject", productName+" 付款失败", "error", err)
 		}
 	}()
 }
@@ -521,7 +521,7 @@ func (s *EmailService) SendAdminInvite(to, siteName, inviterName, role, loginURL
 		"LoginURL": loginURL,
 	})
 	go func() {
-		subj := "You've been added to " + siteName
+		subj := "您已加入 " + siteName
 		if err := s.Send(to, subj, body); err != nil {
 			s.logger.Error("email delivery failed", "to", to, "subject", subj, "error", err)
 		}
@@ -677,76 +677,76 @@ func renderTemplate(tmplStr string, data any) string {
 
 const tmplLicenseCreated = `<!DOCTYPE html>
 <html><body style="font-family: -apple-system, sans-serif; max-width: 600px; margin: 0 auto; padding: 20px;">
-<h2 style="color: #111;">Your {{.Product}} License</h2>
-<p>Your <strong>{{.Plan}}</strong> license is ready.</p>
+<h2 style="color: #111;">您的 {{.Product}} 许可证</h2>
+<p>您的 <strong>{{.Plan}}</strong> 许可证已准备就绪。</p>
 <div style="background: #f4f4f5; border-radius: 8px; padding: 16px; margin: 16px 0; font-family: monospace; font-size: 18px; text-align: center; letter-spacing: 2px;">
 {{.LicenseKey}}
 </div>
-<p style="color: #666; font-size: 14px;">Keep this key safe. You'll need it to activate your software.</p>
+<p style="color: #666; font-size: 14px;">请妥善保管此密钥，激活软件时需要使用。</p>
 </body></html>`
 
 const tmplLicenseExpiring = `<!DOCTYPE html>
 <html><body style="font-family: -apple-system, sans-serif; max-width: 600px; margin: 0 auto; padding: 20px;">
-<h2 style="color: #111;">License Expiring Soon</h2>
-<p>Your <strong>{{.Product}}</strong> license expires on <strong>{{.ExpiresAt}}</strong>.</p>
-<p>License key: <code>{{.LicenseKey}}</code></p>
-<p>Please renew to avoid service interruption.</p>
+<h2 style="color: #111;">许可证即将到期</h2>
+<p>您的 <strong>{{.Product}}</strong> 许可证将于 <strong>{{.ExpiresAt}}</strong> 到期。</p>
+<p>许可证密钥：<code>{{.LicenseKey}}</code></p>
+<p>请及时续费，以免服务中断。</p>
 </body></html>`
 
 const tmplQuotaWarning = `<!DOCTYPE html>
 <html><body style="font-family: -apple-system, sans-serif; max-width: 600px; margin: 0 auto; padding: 20px;">
-<h2 style="color: #d97706;">Quota Warning: {{.Feature}}</h2>
-<p>Your <strong>{{.Product}}</strong> {{.Feature}} usage is at <strong>{{.Pct}}%</strong>.</p>
-<p>Used: {{.Used}} / {{.Limit}}</p>
-<p>Consider upgrading your plan to avoid interruptions.</p>
+<h2 style="color: #d97706;">配额预警：{{.Feature}}</h2>
+<p>您的 <strong>{{.Product}}</strong> 中 {{.Feature}} 的使用量已达到 <strong>{{.Pct}}%</strong>。</p>
+<p>已使用：{{.Used}} / {{.Limit}}</p>
+<p>建议升级套餐，以免服务中断。</p>
 </body></html>`
 
 const tmplSeatInvite = `<!DOCTYPE html>
 <html><body style="font-family: -apple-system, sans-serif; max-width: 600px; margin: 0 auto; padding: 20px;">
-<h2 style="color: #111;">You've Been Invited</h2>
-<p><strong>{{.Inviter}}</strong> has invited you to join <strong>{{.Product}}</strong>.</p>
+<h2 style="color: #111;">您收到了一份成员邀请</h2>
+<p><strong>{{.Inviter}}</strong> 邀请您加入 <strong>{{.Product}}</strong>。</p>
 <p style="margin: 24px 0;">
-  <a href="{{.InviteURL}}" style="display: inline-block; padding: 10px 20px; background: #2563eb; color: white; text-decoration: none; border-radius: 6px;">Accept the invitation</a>
+  <a href="{{.InviteURL}}" style="display: inline-block; padding: 10px 20px; background: #2563eb; color: white; text-decoration: none; border-radius: 6px;">接受邀请</a>
 </p>
-<p style="font-size: 12px; color: #666;">Or paste this link into your browser: <a href="{{.InviteURL}}">{{.InviteURL}}</a></p>
-<p style="font-size: 12px; color: #999;">This link expires in 7 days.</p>
+<p style="font-size: 12px; color: #666;">也可以将此链接粘贴到浏览器：<a href="{{.InviteURL}}">{{.InviteURL}}</a></p>
+<p style="font-size: 12px; color: #999;">此链接将在 7 天后失效。</p>
 </body></html>`
 
 const tmplAdminInvite = `<!DOCTYPE html>
 <html><body style="font-family: -apple-system, sans-serif; max-width: 600px; margin: 0 auto; padding: 20px;">
-<h2 style="color: #111;">You've been added to {{.SiteName}}</h2>
-<p><strong>{{.Inviter}}</strong> added you as a <strong>{{.Role}}</strong> on the <strong>{{.SiteName}}</strong> admin team.</p>
-<p>Sign in with this email using the email-OTP login to access the admin panel:</p>
+<h2 style="color: #111;">您已加入 {{.SiteName}}</h2>
+<p><strong>{{.Inviter}}</strong> 已将您以 <strong>{{.Role}}</strong> 身份加入 <strong>{{.SiteName}}</strong> 管理团队。</p>
+<p>请使用当前邮箱接收验证码并登录管理后台：</p>
 <p style="margin: 24px 0;">
-  <a href="{{.LoginURL}}" style="display: inline-block; padding: 10px 20px; background: #2563eb; color: white; text-decoration: none; border-radius: 6px;">Sign in</a>
+  <a href="{{.LoginURL}}" style="display: inline-block; padding: 10px 20px; background: #2563eb; color: white; text-decoration: none; border-radius: 6px;">登录后台</a>
 </p>
-<p style="font-size: 12px; color: #666;">Or paste this link into your browser: <a href="{{.LoginURL}}">{{.LoginURL}}</a></p>
+<p style="font-size: 12px; color: #666;">也可以将此链接粘贴到浏览器：<a href="{{.LoginURL}}">{{.LoginURL}}</a></p>
 </body></html>`
 
 const tmplLicenseSuspended = `<!DOCTYPE html>
 <html><body style="font-family: -apple-system, sans-serif; max-width: 600px; margin: 0 auto; padding: 20px;">
-<h2 style="color: #dc2626;">License Suspended</h2>
-<p>Your <strong>{{.Product}}</strong> license has been suspended.</p>
-{{if .Reason}}<p>Reason: {{.Reason}}</p>{{end}}
+<h2 style="color: #dc2626;">许可证已暂停</h2>
+<p>您的 <strong>{{.Product}}</strong> 许可证已被暂停。</p>
+{{if .Reason}}<p>原因：{{.Reason}}</p>{{end}}
 </body></html>`
 
 const tmplPaymentFailed = `<!DOCTYPE html>
 <html><body style="font-family: -apple-system, sans-serif; max-width: 600px; margin: 0 auto; padding: 20px;">
-<h2 style="color: #d97706;">Payment Failed</h2>
-<p>We couldn't process your payment for <strong>{{.Product}}</strong>.</p>
-<p>Please update your payment method to avoid service interruption.</p>
+<h2 style="color: #d97706;">付款失败</h2>
+<p>无法处理您为 <strong>{{.Product}}</strong> 提交的付款。</p>
+<p>请更新付款方式，以免服务中断。</p>
 </body></html>`
 
 const tmplLicenseExpired = `<!DOCTYPE html>
 <html><body style="font-family: -apple-system, sans-serif; max-width: 600px; margin: 0 auto; padding: 20px;">
-<h2 style="color: #dc2626;">License Expired</h2>
-<p>Your <strong>{{.Product}}</strong> license has expired.</p>
-<p>Please renew your subscription to continue using the software.</p>
+<h2 style="color: #dc2626;">许可证已到期</h2>
+<p>您的 <strong>{{.Product}}</strong> 许可证已到期。</p>
+<p>请续订后继续使用软件。</p>
 </body></html>`
 
 const tmplTrialExpired = `<!DOCTYPE html>
 <html><body style="font-family: -apple-system, sans-serif; max-width: 600px; margin: 0 auto; padding: 20px;">
-<h2 style="color: #d97706;">Trial Period Ended</h2>
-<p>Your <strong>{{.Product}}</strong> trial has ended.</p>
-<p>Subscribe to a paid plan to continue using all features.</p>
+<h2 style="color: #d97706;">试用期已结束</h2>
+<p>您的 <strong>{{.Product}}</strong> 试用期已结束。</p>
+<p>请订阅付费套餐以继续使用全部功能。</p>
 </body></html>`

@@ -19,19 +19,20 @@ import { useI18n } from "@/i18n"
 import { admin } from "@/lib/api"
 
 const TEMPLATE_META: Record<string, { label: string; variables: string[] }> = {
-  license_created: { label: "License Created", variables: ["Product", "Plan", "LicenseKey"] },
-  license_expiring: { label: "License Expiring", variables: ["Product", "LicenseKey", "ExpiresAt"] },
-  license_expired: { label: "License Expired", variables: ["Product"] },
-  trial_expired: { label: "Trial Expired", variables: ["Product"] },
-  license_suspended: { label: "License Suspended", variables: ["Product", "Reason"] },
-  quota_warning: { label: "Quota Warning", variables: ["Product", "Feature", "Used", "Limit", "Pct"] },
-  seat_invite: { label: "Seat Invite", variables: ["Product", "Inviter"] },
-  payment_failed: { label: "Payment Failed", variables: ["Product"] },
+  license_created: { label: "许可证已创建", variables: ["Product", "Plan", "LicenseKey"] },
+  license_expiring: { label: "许可证即将到期", variables: ["Product", "LicenseKey", "ExpiresAt"] },
+  license_expired: { label: "许可证已到期", variables: ["Product"] },
+  trial_expired: { label: "试用期已结束", variables: ["Product"] },
+  license_suspended: { label: "许可证已暂停", variables: ["Product", "Reason"] },
+  quota_warning: { label: "配额预警", variables: ["Product", "Feature", "Used", "Limit", "Pct"] },
+  seat_invite: { label: "成员邀请", variables: ["Product", "Inviter"] },
+  admin_invite: { label: "管理员邀请", variables: ["SiteName", "Inviter", "Role", "LoginURL"] },
+  payment_failed: { label: "付款失败", variables: ["Product"] },
 }
 
 const PREVIEW_DATA: Record<string, string> = {
-  Product: "AwesomeApp",
-  Plan: "Pro",
+  Product: "示例产品",
+  Plan: "专业版",
   LicenseKey: "KG-XXXX-XXXX-XXXX-XXXX",
   ExpiresAt: "2026-06-15",
   Feature: "api_calls",
@@ -39,7 +40,10 @@ const PREVIEW_DATA: Record<string, string> = {
   Limit: "1000",
   Pct: "80",
   Inviter: "admin@company.com",
-  Reason: "Policy violation",
+  Reason: "违反使用政策",
+  SiteName: "saas-admin",
+  Role: "管理员",
+  LoginURL: "https://example.com/login",
 }
 
 function fillTemplate(html: string): string {
@@ -131,7 +135,7 @@ export default function EmailTemplatesManager() {
                         <span className="text-sm font-medium">{meta.label}</span>
                         {isCustomized && (
                           <Badge variant="secondary" className="ml-2 text-xs">
-                            customized
+                            已自定义
                           </Badge>
                         )}
                         <div className="mt-0.5 break-words text-xs text-muted-foreground">
@@ -222,7 +226,7 @@ export default function EmailTemplatesManager() {
           </DialogHeader>
           {previewing && (
             <iframe
-              title="Email Preview"
+              title="邮件预览"
               sandbox=""
               srcDoc={getPreviewHtml(previewing)}
               className="w-full h-96 border rounded-lg bg-white"
